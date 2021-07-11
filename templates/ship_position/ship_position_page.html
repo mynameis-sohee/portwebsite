@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>실시간 선박 위치추적</title>
+  {% load static %}
+  <link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
+  <script src="{% static 'bootstrap.min.js' %}"></script>
+  <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=clkjj6mzd0"></script>
+  <script src=" https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+  <!-- 폰트시작 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300&display=swap" rel="stylesheet">
+  <!-- 폰트 끝 -->
+
+</head>
+<style>
+  * {
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+
+  #map {
+    width: 50%;
+    height: 500px;
+    float: right;
+  }
+
+  ;
+</style>
+
+<script>
+  $(document).ready(function () {
+    let map = new naver.maps.Map('map', {
+      center: new naver.maps.LatLng(37.4981125, 127.0379399),
+      zoom: 10,
+      zoomControl:true,
+      zoomControlOptions:{
+        style:naver.maps.ZoomControlStyle.SMALL,
+        position:naver.maps.Position.TOP_RIGHT
+      }
+    
+    });
+  })
+
+  $(document).on("click", "#search_button", function () {
+    var search_key = $('#shipCallCode').val()
+    $.ajax({
+      type: 'GET',
+      url: "{% url 'single_Vessel_position' %}",
+      data: {
+        'search_key': search_key
+      },
+      error: function () {
+        alert("오류!")
+      },
+      success: function (data) {
+        $('#data_table').html(data)
+        let a = data['mmsi']
+        console.log(a)
+      }
+    })
+  })
+
+  function markerMaking(){
+    
+    let marker = new naver.maps.Marker({
+    position: new naver.maps.LatLng(37.4981125, 127.0379399),
+    map: map
+    });
+  }
+</script>
+
+<body>
+  <div id = 'data_table'>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">     <!-- 네비게이션바 시작 -->
+      <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'main' %}">서비스명</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'anchorage' %}">정박지 현황</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">실시간 선박 위치 추적</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'wharf' %}">부두 현황</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'safety' %}">안전 재난경보</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>                                                          <!-- 네비게이션바 끝 -->
+    <div class="row">                                               <!-- 검색창-->
+      <div class="col-lg-6">
+        <div class="input-group">
+          <input type="text" class="form-control" id="shipCallCode" placeholder="Search for...">
+          <span class="input-group-btn">
+            <button id="search_button" class="btn btn-default" type="button">Go!</button>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div id="map"></div>                                            <!--지도-->
+
+    <div class="card">
+      <div class="card-body">
+        mmsi: {{mmsi}} <br>
+        latitude:{{latitude}} <br>
+        longitude:{{longitude}} <br>
+        speed:{{speed}} <br>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
