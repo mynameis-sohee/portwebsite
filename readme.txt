@@ -4,7 +4,7 @@ source venv/portwebsite/bin/activate
 명령어 입력
 가상환경 나가기는 deactivate
 
-서버 실행하고 싶으면 가상환경 들어가서 python manage.py runserver 명령어 입력하면 서버 실행
+서버 실행하고 싶으면 가상환경 들어가서 python manage.py runserver 0.0.0.0:8000 명령어 입력하면 서버 실행
 
 https://www.mongodb.com/compatibility/mongodb-and-django
 위의 링크에서 3번째 방법인 Djongo 사용하는 방법으로 데이터베이스랑 연결함
