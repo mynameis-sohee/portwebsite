@@ -3,6 +3,7 @@ from typing import Protocol
 import requests
 import json
 from django.http import HttpResponse
+from django.http import JsonResponse
 
 # Create your views here.
 
@@ -59,7 +60,7 @@ def single_Vessel_position(request):
         print('timestamp:' + res_timestamp)
         print('dsrc:' + res_dsrc)
         
-        return render(request, 'ship_position/ship_position_page.html',context)
+        return JsonResponse(context)
 
     else:
         return HttpResponse("GET이아님")
@@ -77,6 +78,4 @@ def test(request):
             'timestamp' : "2021-07-11T10:44:20",
             'dsrc' : "TER"
         }
-    testJson = json.dumps(context)
-    print(testJson)
-    return render(request, 'ship_position/ship_position_page.html',{'testJson':testJson})
+    return JsonResponse(context)

@@ -61,12 +61,12 @@ let temp_html
         alert("오류!")
       },
       success: function (data) {
-        var content =$(data).find("#data_table").text();
-        test = JSON.parse(content)
-        console.log(test)       
-        let temp_mmsi = test['mmsi']
-        let temp_latitude = test['latitude']
-        let temp_longitude = test['longitude']
+        console.log(data)
+        data_json = JSON.parse(data)
+        console.log(data_json)      
+        let temp_mmsi = data_json['mmsi']
+        let temp_latitude = data_json['latitude']
+        let temp_longitude = data_json['longitude']
         temp_html = `        <div class="card text-dark bg-light mb-3">
           <div class="card-header">힘찬불나방호</div>
           <div class="card-body">
@@ -83,13 +83,13 @@ let temp_html
 
   function markerMaking(){  
     let marker = new naver.maps.Marker({
-    position: new naver.maps.LatLng(test['latitude'],test['longitude']),
+    position: new naver.maps.LatLng(data_json['latitude'],data_json['longitude']),
     map: map
     });
     var infowindow = new naver.maps.InfoWindow({
     content: temp_html
 });
-map.panTo(new naver.maps.LatLng(test['latitude'],test['longitude']));
+map.panTo(new naver.maps.LatLng(data_json['latitude'],data_json['longitude']));
 naver.maps.Event.addListener(marker, "click", function(e) {
     if (infowindow.getMap()) {
         infowindow.close();
