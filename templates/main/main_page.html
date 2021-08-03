@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>메인페이지</title>
+  {% load static %}
+  <link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}">
+  <script src="{% static 'bootstrap.min.js' %}"></script>
+  <!-- 폰트시작 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300&display=swap" rel="stylesheet">
+  <!-- 폰트 끝 -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+</head>
+<style>
+  * {
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+
+</style>
+<script>
+  let a=0
+  $(document).ready(function () {
+    ShowingStatus()
+            })
+
+  function ShowingStatus(){
+    var port_name = "{{항구이름|escapejs}}" 
+    var port_status = "{{상태|escapejs}}"
+    var name_lst = stringToList(port_name)
+    var status_lst = stringToList(port_status)
+    /*for(let i=0;i<name_lst.length;i++){ 
+      let temp_html = `<li>${name_lst[i]}:${status_lst[i]}</li>`
+      $('#marker').append(temp_html)
+    }*/
+    let temp_count_normal = status_lst.filter(element => '정상' ===element).length
+    let temp_count_abnormal = status_lst.filter(element => '일부파손' ===element).length
+    data = {
+    datasets: [{
+      backgroundColor : ['rgba(65,105,225,1)','rgba(220,20,60,1)'],
+      data : [temp_count_normal,temp_count_abnormal],
+      hoverBorderColor: "rgba(234, 236, 244, 1)",
+    }],
+    labels: ['정상','일부파손']
+  };
+  var ctx1 = document.getElementById("myChart1");
+  var myPieChart = new Chart(ctx1, {
+    type:'pie',
+    data:data,
+    options:{}
+  });
+  }
+  function stringToList(inputstring){
+    inputstring=inputstring.replace('[','');
+    inputstring=inputstring.replace(']','');
+    inputstring = inputstring.replace(/(\s*)/g, "");  
+    inputstring = inputstring.replace(/'/gi,'');
+    return inputstring.split(",");
+  }
+
+  
+</script>
+<body>
+  <!-- 네비게이션바 시작 -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'main' %}">힘찬불나방</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'anchorage' %}">정박지 현황</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'ship_position' %}">실시간 선박 위치추적</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'wharf' %}">부두 현황</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'safety' %}">안전 재난경보</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <!-- 네비게이션바 끝 -->
+  <div class="row">
+  <div class="col-xl-6" style="padding:0">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">실시간 부두현황</h6>
+        </div>
+        <!-- Card Body -->
+        <div class="card-body">
+            <div>
+                <div style="float:left;">
+                <canvas id="myChart1" style="height:300px;width:300px;"></canvas>
+                </div>
+                <div style="float:left;">
+                <h1>일부 파손</h1>
+                <li>OTK2부두2선석</li>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+  <div class="col-xl-6" style="padding:0">
+    <div class="card shadow mb-4">
+      <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">실시간 날씨현황</h6>
+      </div>
+      <!-- Card Body -->
+      <div class="card-body">
+          <div>
+            조위관측 데이터<br>
+            관측시간: {{관측_시간}} <br>
+            관측소 명: {{관측소_명}}<br> 
+            조위: {{조위}}cm <br>
+            수온: {{수온}}℃ <br>
+            염분: {{염분}}psu  <br>
+            기온: {{기온}}℃ <br>
+            기압: {{기압}}hPa <br>
+            풍향: {{풍향}}deg <br>
+            풍속: {{풍속}}m/s <br>
+            돌풍: {{돌풍}}m/s<br>
+          </div>
+      </div>
+  </div>
+
+  </div>
+</div>
+</body>
+</html>

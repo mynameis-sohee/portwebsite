@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>실시간 선박 위치추적</title>
+  {% load static %}
+  <link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
+  <script src="{% static 'bootstrap.min.js' %}"></script>
+  <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=clkjj6mzd0"></script>
+  <script src=" https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+  <!-- 폰트시작 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300&display=swap" rel="stylesheet">
+  <!-- 폰트 끝 -->
+
+</head>
+<style>
+  * {
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+
+  #map {
+    width: 100%;
+    height: 500px;
+    float: right;
+  }
+  
+</style>
+
+<script>
+let map
+let test
+let temp_html
+  $(document).ready(function () {
+    map = new naver.maps.Map('map', {
+      center: new naver.maps.LatLng(37.4981125, 127.0379399),
+      zoom: 10,
+      zoomControl:true,
+      zoomControlOptions:{
+        style:naver.maps.ZoomControlStyle.SMALL,
+        position:naver.maps.Position.TOP_RIGHT
+      }
+    
+    });
+  })
+  $(document).on("click", "#search_button", function () {
+    var search_key = $('#shipCallCode').val()
+    $.ajax({
+      type: 'GET',
+      url: "{% url 'single_Vessel_position' %}",
+      dataType : "html",
+      data: {
+        'search_key': search_key
+      },
+      error: function () {
+        alert("오류!")
+      },
+      success: function (data) {
+        var content =$(data).find("#data_table").text();
+        test = JSON.parse(content)
+        console.log(test)       
+        let temp_mmsi = test['mmsi']
+        let temp_latitude = test['latitude']
+        let temp_longitude = test['longitude']
+        temp_html = `        <div class="card text-dark bg-light mb-3">
+          <div class="card-header">힘찬불나방호</div>
+          <div class="card-body">
+            <h5 class="card-title"></h5>
+            <p class="card-text">MMSI : ${temp_mmsi}<br>경도 : ${temp_latitude}<br>위도: ${temp_longitude}</p>
+          </div>
+        </div>`
+        markerMaking()
+        $('#card_position').empty()
+        $('#card_position').append(temp_html)
+      }
+    })
+  })
+
+  function markerMaking(){  
+    let marker = new naver.maps.Marker({
+    position: new naver.maps.LatLng(test['latitude'],test['longitude']),
+    map: map
+    });
+    var infowindow = new naver.maps.InfoWindow({
+    content: temp_html
+});
+map.panTo(new naver.maps.LatLng(test['latitude'],test['longitude']));
+naver.maps.Event.addListener(marker, "click", function(e) {
+    if (infowindow.getMap()) {
+        infowindow.close();
+    } else {
+        infowindow.open(map, marker);
+    }
+});
+  }
+</script>
+
+<body>
+  <div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'main' %}">힘찬불나방</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'anchorage' %}">정박지 현황</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'ship_position' %}">실시간 선박 위치추적</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'wharf' %}">부두 현황</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'safety' %}">안전 재난경보</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="row">
+    <div class="col-xl-4" style="margin:0px;padding-right:0px">
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="선박 호출부호" aria-describedby="basic-addon2">
+        <button type="button" class="btn btn-primary" id="search_button">검색</button>
+      </div>
+      <div id="card_position">       
+      </div>
+    </div>
+    <div class="col-xl-8" style="padding-left:0px">
+      <div id="map"></div>
+    </div>
+  </div>
+    <div id="data_table">{{testJson}}</div>
+  </div>
+    </body>
+    </html>
+   

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>안전 재난경보</title>
+  {% load static %}
+  <link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
+  <script src="{% static 'bootstrap.min.js' %}"></script>
+  <!-- 폰트시작 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300&display=swap" rel="stylesheet">
+  <!-- 폰트 끝 -->
+</head>
+<style>
+  * {
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+
+  ;
+</style>
+
+<body>
+  <!-- 네비게이션바 시작 -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'main' %}">서비스명</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'anchorage' %}">정박지 현황</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'ship_position' %}">실시간 선박 위치추적</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'wharf' %}">부두 현황</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">안전 재난경보</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <!-- 네비게이션바 끝   -->
+</body>
+
+</html>
