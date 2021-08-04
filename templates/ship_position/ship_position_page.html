@@ -53,7 +53,7 @@ let temp_html
     $.ajax({
       type: 'GET',
       url: "{% url 'single_Vessel_position' %}",
-      dataType : "html",
+      dataType : "json",
       data: {
         'search_key': search_key
       },
@@ -62,8 +62,15 @@ let temp_html
       },
       success: function (data) {
         console.log(data)
-        data_json = JSON.parse(data)
-        console.log(data_json)      
+        console.log(typeof(data))
+        data_json = data
+        console.log(data_json)
+        if (data_json['result'] == 'fail'){
+          alert("존재하지 않는 선박명입니다. 선박명을 다시 확인해주세요.")
+        }
+        if (data_json['result'] == 'fail_data'){
+          alert("정보를 제공하지 않는 선박입니다.")
+        }
         let temp_mmsi = data_json['mmsi']
         let temp_latitude = data_json['latitude']
         let temp_longitude = data_json['longitude']
@@ -130,7 +137,7 @@ naver.maps.Event.addListener(marker, "click", function(e) {
     <div class="row">
     <div class="col-xl-4" style="margin:0px;padding-right:0px">
       <div class="input-group">
-        <input type="text" class="form-control" placeholder="선박 호출부호" aria-describedby="basic-addon2">
+        <input type="text" class="form-control" placeholder="선박 호출부호" aria-describedby="basic-addon2" id="shipCallCode">
         <button type="button" class="btn btn-primary" id="search_button">검색</button>
       </div>
       <div id="card_position">       

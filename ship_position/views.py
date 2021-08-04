@@ -4,6 +4,9 @@ import requests
 import json
 from django.http import HttpResponse
 from django.http import JsonResponse
+import sys, os
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+from crawling import imo_crawling
 
 # Create your views here.
 
@@ -15,17 +18,28 @@ def single_Vessel_position(request):
         api_key ='1f86e6bc78c4a862fc418932b8649f7d44469e32'
         timespan = '20'
         Protocol_type = 'jsono'
-        mmsi = request.GET['search_key']
+        search_key = request.GET['search_key']
+        IMO = imo_crawling.get_IMO(search_key)
+
+        if IMO == False:
+            return {'result' : 'fail'}
 
         pre_single_vessel = 'https://services.marinetraffic.com/api/exportvessel/v:5/'
-        queryParams = {'service_key': api_key, 'timespan': timespan, 'Protocol_type' : Protocol_type, 'mmsi' : mmsi}
+        queryParams = {'service_key': api_key, 'timespan': timespan, 'Protocol_type' : Protocol_type, 'IMO' : IMO}
 
-        api_url = pre_single_vessel + queryParams['service_key'] + '/timespan:' + queryParams['timespan'] + '/protocol:' + queryParams['Protocol_type'] + '/mmsi:' + queryParams['mmsi']
+        api_url = pre_single_vessel + queryParams['service_key'] + '/timespan:' + queryParams['timespan'] + '/protocol:' + queryParams['Protocol_type'] + '/imo:' + queryParams['IMO']
 
         print(api_url)
 
         r = requests.get(api_url)
         r = r.json()
+        #정보가 없는 예외처리 미완성
+        print(r)
+        if r == None:
+            return JsonResponse({'result : fail_data'})
+
+        
+        
         
 
         res_mmsi = r[0]['MMSI']
@@ -39,6 +53,7 @@ def single_Vessel_position(request):
         res_dsrc = r[0]['DSRC']
 
         context = {
+            'result' : 'success',
             'mmsi' : res_mmsi,
             'latitude' : res_latitude,
             'longitude' : res_longitude,
@@ -65,17 +80,17 @@ def single_Vessel_position(request):
     else:
         return HttpResponse("GET이아님")
 
-def test(request):
+# def test(request):
 
-    context = {
-            'mmsi' : "370937000",
-            'latitude' : "35.509144",
-            'longitude' : "129.389110",
-            'speed' : "127",
-            'heading' : "33",
-            'course' : "36",
-            'status' : "0",
-            'timestamp' : "2021-07-11T10:44:20",
-            'dsrc' : "TER"
-        }
-    return JsonResponse(context)
+#     context = {
+#             'mmsi' : "370937000",
+#             'latitude' : "35.509144",
+#             'longitude' : "129.389110",
+#             'speed' : "127",
+#             'heading' : "33",
+#             'course' : "36",
+#             'status' : "0",
+#             'timestamp' : "2021-07-11T10:44:20",
+#             'dsrc' : "TER"
+#         }
+#     return JsonResponse(context)
