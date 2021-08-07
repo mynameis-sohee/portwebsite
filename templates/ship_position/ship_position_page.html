@@ -29,23 +29,22 @@
     height: 500px;
     float: right;
   }
-  
 </style>
 
 <script>
-let map
-let test
-let temp_html
+  let map
+  let test
+  let temp_html
   $(document).ready(function () {
     map = new naver.maps.Map('map', {
       center: new naver.maps.LatLng(37.4981125, 127.0379399),
       zoom: 10,
-      zoomControl:true,
-      zoomControlOptions:{
-        style:naver.maps.ZoomControlStyle.SMALL,
-        position:naver.maps.Position.TOP_RIGHT
+      zoomControl: true,
+      zoomControlOptions: {
+        style: naver.maps.ZoomControlStyle.SMALL,
+        position: naver.maps.Position.TOP_RIGHT
       }
-    
+
     });
   })
   $(document).on("click", "#search_button", function () {
@@ -53,57 +52,56 @@ let temp_html
     $.ajax({
       type: 'GET',
       url: "{% url 'single_Vessel_position' %}",
-      dataType : "json",
+      dataType: "json",
       data: {
         'search_key': search_key
       },
       error: function () {
-        alert("오류!")
+        // 선박명이 없는경우 response에 실패
+        alert("해당하는 선박을 찾을 수 없습니다.")
       },
       success: function (data) {
+        $('#card_position').empty()
         console.log(data)
-        console.log(typeof(data))
+        console.log(typeof (data))
         data_json = data
         console.log(data_json)
-        if (data_json['result'] == 'fail'){
-          alert("존재하지 않는 선박명입니다. 선박명을 다시 확인해주세요.")
-        }
-        if (data_json['result'] == 'fail_data'){
-          alert("정보를 제공하지 않는 선박입니다.")
-        }
+
         let temp_mmsi = data_json['mmsi']
         let temp_latitude = data_json['latitude']
         let temp_longitude = data_json['longitude']
         temp_html = `        <div class="card text-dark bg-light mb-3">
-          <div class="card-header">힘찬불나방호</div>
+          <div class="card-header">${search_key}</div>
           <div class="card-body">
             <h5 class="card-title"></h5>
             <p class="card-text">MMSI : ${temp_mmsi}<br>경도 : ${temp_latitude}<br>위도: ${temp_longitude}</p>
           </div>
         </div>`
+        if (data_json['result'] == 'fail_data') {
+          alert("정보를 제공하지 않는 선박입니다.")
+        }
         markerMaking()
-        $('#card_position').empty()
         $('#card_position').append(temp_html)
       }
     })
   })
 
-  function markerMaking(){  
+  function markerMaking() {
     let marker = new naver.maps.Marker({
-    position: new naver.maps.LatLng(data_json['latitude'],data_json['longitude']),
-    map: map
+      position: new naver.maps.LatLng(data_json['latitude'], data_json['longitude']),
+      map: map
     });
     var infowindow = new naver.maps.InfoWindow({
-    content: temp_html
-});
-map.panTo(new naver.maps.LatLng(data_json['latitude'],data_json['longitude']));
-naver.maps.Event.addListener(marker, "click", function(e) {
-    if (infowindow.getMap()) {
+      content: temp_html
+    });
+    map.panTo(new naver.maps.LatLng(data_json['latitude'], data_json['longitude']));
+    naver.maps.Event.addListener(marker, "click", function (e) {
+      if (infowindow.getMap()) {
         infowindow.close();
-    } else {
+      } else {
         infowindow.open(map, marker);
-    }
-});
+      }
+    });
   }
 </script>
 
@@ -135,20 +133,21 @@ naver.maps.Event.addListener(marker, "click", function(e) {
       </div>
     </nav>
     <div class="row">
-    <div class="col-xl-4" style="margin:0px;padding-right:0px">
-      <div class="input-group">
-        <input type="text" class="form-control" placeholder="선박 호출부호" aria-describedby="basic-addon2" id="shipCallCode">
-        <button type="button" class="btn btn-primary" id="search_button">검색</button>
+      <div class="col-xl-4" style="margin:0px;padding-right:0px">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="선박 호출부호" aria-describedby="basic-addon2"
+            id="shipCallCode">
+          <button type="button" class="btn btn-primary" id="search_button">검색</button>
+        </div>
+        <div id="card_position">
+        </div>
       </div>
-      <div id="card_position">       
+      <div class="col-xl-8" style="padding-left:0px">
+        <div id="map"></div>
       </div>
     </div>
-    <div class="col-xl-8" style="padding-left:0px">
-      <div id="map"></div>
-    </div>
-  </div>
     <div id="data_table">{{testJson}}</div>
   </div>
-    </body>
-    </html>
-   
+</body>
+
+</html>

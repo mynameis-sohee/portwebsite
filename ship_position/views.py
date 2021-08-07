@@ -33,10 +33,9 @@ def single_Vessel_position(request):
 
         r = requests.get(api_url)
         r = r.json()
-        #정보가 없는 예외처리 미완성
-        print(r)
-        if r == None:
-            return JsonResponse({'result : fail_data'})
+        #정보가 없는 예외처리
+        if not r:
+            return JsonResponse({'result' : 'fail_data'})
 
         
         
