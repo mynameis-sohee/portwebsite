@@ -74,9 +74,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-
 # Database
-# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 # DATABASES = {
 #     'default': {
@@ -84,28 +82,42 @@ WSGI_APPLICATION = 'config.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+
+# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
+# 몽고디비 데이터베이스
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'djongo',
+#         'ENFORCE_SCHEMA': True,
+#         'LOGGING': {
+#             'version': 1,
+#             'loggers': {
+#                 'djongo': {
+#                     'level': 'DEBUG',
+#                     'propogate': False,                        
+#                 }
+#             },
+#         },
+#         'NAME': 'portwebsite_db',
+#         'CLIENT': {
+#             'host': '127.0.0.1',
+#             'port': 27017,
+#             'username': 'dong5854',
+#             'password': "sun5758",
+#             'authSource': 'admin',
+#             'authMechanism': 'SCRAM-SHA-1'
+#         }
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'djongo',
-        'ENFORCE_SCHEMA': True,
-        'LOGGING': {
-            'version': 1,
-            'loggers': {
-                'djongo': {
-                    'level': 'DEBUG',
-                    'propogate': False,                        
-                }
-            },
-         },
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'portwebsite_db',
-        'CLIENT': {
-            'host': '127.0.0.1',
-            'port': 27017,
-            'username': 'FIREMOTH',
-            'password': "glacksqnfskqkd1!",
-            'authSource': 'admin',
-            'authMechanism': 'SCRAM-SHA-1'
-        }
+        'USER': 'FIREMOTH',
+        'PASSWORD': 'glacksqnfskqkd1!',
+        'HOST': 'portwebsite.cictpybqx5bj.ap-northeast-2.rds.amazonaws.com',
+        'PORT': 5432,
     }
 }
 
