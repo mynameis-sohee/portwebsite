@@ -10,13 +10,15 @@
   <link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
   <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}">
   <script src="{% static 'bootstrap.min.js' %}"></script>
+  <script src="{% static 'ShowingHarbor.js' %}"></script>
   <!-- 폰트시작 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300&display=swap" rel="stylesheet">
   <!-- 폰트 끝 -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+  {% comment %} <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script> {% endcomment %}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.0/dist/chart.min.js"></script>
   <!--네이버 openapi-->
   <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=clkjj6mzd0"></script>
 
@@ -25,6 +27,7 @@
   * {
     font-family: 'Noto Sans KR', sans-serif;
   }
+
   #map {
     width: 50%;
     height: 500px;
@@ -36,6 +39,7 @@
   let map //네이버 지도 오브젝트(전역으로 해야됨)
   $(document).ready(function () {
     ShowingStatus()
+    ShowingAnchorage()
 
     map = new naver.maps.Map('map', {
       center: new naver.maps.LatLng(35.44043374181368, 129.3934977814075),
@@ -76,9 +80,42 @@
     });
   }
 
-  function ShowingHarborMarker(){
-    
+  function ShowingAnchorage() {
+    var ctx = document.getElementById('anchoragechart').getContext('2d');
+    var chart = new Chart(ctx, { // The type of chart we want to create 
+      type: 'bar', // The data for our dataset 
+      data: {
+        labels: ['E1', 'E2', 'E3', 'etc'],
+        datasets: [{
+            backgroundColor: [
+              'rgba(54, 162, 235, 0.5)',
+              'rgba(255, 206, 86, 0.5)',
+              'rgba(75, 192, 192, 0.5)',
+              'rgba(153, 102, 255, 0.5)',
+            ],
+            borderColor: [
+              'rgba(54, 162, 235, 1.5)',
+              'rgba(255, 206, 86, 1.5)',
+              'rgba(75, 192, 192, 1.5)',
+              'rgba(153, 102, 255, 1.5)',
+            ],
+            data: [{{E1_quantity|safe}},{{E2_quantity|safe}},{{E3_quantity|safe}},{{etc_quantity|safe}}]
+          }
+        ]
+      },
+    options: {
+      plugins:{
+        legend: {
+          display: false
+        },
+        tooltips: {
+          enabled: false
+        }
+      }
+    }
   }
+  );
+}
 
   function stringToList(inputstring) {
     inputstring = inputstring.replace('[', '');
@@ -144,53 +181,67 @@
         </div>
         <!-- Card Body -->
         <div class="card-body">
-          <div>
-            조위관측 데이터<br>
-            관측시간: {{관측_시간}} <br>
-            관측소 명: {{관측소_명}}<br>
-            조위: {{조위}}cm <br>
-            수온: {{수온}}℃ <br>
-            염분: {{염분}}psu <br>
-            기온: {{기온}}℃ <br>
-            기압: {{기압}}hPa <br>
-            풍향: {{풍향}}deg <br>
-            풍속: {{풍속}}m/s <br>
-            돌풍: {{돌풍}}m/s<br>
-                <div class="col-xl-6" style="padding:0">
+          <div class="row">
+            <div class="col-xl-4">
+              조위관측 데이터<br>
+              관측시간: {{관측시간}} <br>
+              관측소 명: {{관측소명}}<br>
+              조위: {{조위}}cm <br>
+              수온: {{수온}}℃ <br>
+              염분: {{염분}}psu <br>
+              기온: {{기온}}℃ <br>
+              기압: {{기압}}hPa <br>
+              풍향: {{풍향}}deg <br>
+              풍속: {{풍속}}m/s <br>
+              돌풍: {{돌풍}}m/s<br>
+            </div>
+            <div class="col-xl-2" style="padding:0">
+              <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                  <h6 class="m-0 font-weight-bold text-primary">오늘의 날씨</h6>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                  <div>
+                    날씨 : {{날씨}}<br>
+                    {% if 날씨 == "맑음" %}
+                    <img src="{% static 'main/sun.svg' %}" alt="이미지 준비중입니다.">
+                    {% elif 날씨 == "구름 많음" %}
+                    <img src="{% static 'main/clouds.svg' %}" alt="이미지 준비중입니다.">
+                    {% elif 날씨 == "흐림" %}
+                    <img src="{% static 'main/sun-& cloud.svg' %}" style="max-width:60%;height:auto;" alt="이미지 준비중입니다.">
+                    {% elif 날씨 == "비" %}
+                    <img src="{% static 'main/rain.svg' %}" alt="이미지 준비중입니다.">
+                    {% elif 날씨 == "눈" %}
+                    <img src="{% static 'main/snow.svg' %}" alt="이미지 준비중입니다.">
+                    {% elif 날씨 == "소나기" %}
+                    <img src="{% static 'main/rain.svg' %}" alt="이미지 준비중입니다.">
+                    {% else %}
+                    이미지 준비중입니다ㅠㅠ
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="card shadow mb-4">
         <div class="card-header py-3">
-          <h6 class="m-0 font-weight-bold text-primary">오늘의 날씨</h6>
+          <h6 class="m-0 font-weight-bold text-primary">정박지 현황</h6>
         </div>
         <!-- Card Body -->
         <div class="card-body">
           <div>
-            날씨 : {{날씨}}<br>
-            {% if 날씨 == "맑음" %}
-              <img src="{% static 'main/sun.svg' %}" alt="이미지 준비중입니다.">
-            {% elif 날씨 == "구름 많음" %}
-              <img src="{% static 'main/clouds.svg' %}" alt="이미지 준비중입니다.">
-            {% elif 날씨 == "흐림" %}
-              <img src="{% static 'main/sun-& cloud.svg' %}" alt="이미지 준비중입니다.">
-            {% elif 날씨 == "비" %}
-              <img src="{% static 'main/rain.svg' %}" alt="이미지 준비중입니다.">
-            {% elif 날씨 == "눈" %} 
-              <img src="{% static 'main/snow.svg' %}" alt="이미지 준비중입니다.">
-            {% elif 날씨 == "소나기" %}
-              <img src="{% static 'main/rain.svg' %}" alt="이미지 준비중입니다.">
-            {% else %}
-              이미지 준비중입니다ㅠㅠ
-            {% endif %}
-            
-          </div>
-        </div>
-      </div>
-    </div>
+            <canvas id="anchoragechart"></canvas>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div id="map">   
+  </div>
+    <div id="map">
   </div>
 </body>
+
 </html>

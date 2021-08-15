@@ -115,65 +115,65 @@ print(type(todayis))
 cursor.execute("TRUNCATE TABLE today_weather_main;")
 cursor.execute("INSERT INTO today_weather_main (weather) VALUES (%s);", (todayis,))
 
-print(date_one, most_frequent(date_one_wfKor), date_one_tmn,
-date_one_tmx, round(date_one_pop/date_one_pop_cnt, -1))
+# print(date_one, most_frequent(date_one_wfKor), date_one_tmn,
+# date_one_tmx, round(date_one_pop/date_one_pop_cnt, -1))
 
-print(date_two, most_frequent(date_two_wfKor), date_two_tmn,
-date_two_tmx, round(date_two_pop/date_two_pop_cnt, -1))
-
-
+# print(date_two, most_frequent(date_two_wfKor), date_two_tmn,
+# date_two_tmx, round(date_two_pop/date_two_pop_cnt, -1))
 
 
-post_list = [
-    {
-        "시간": date_zero,
-        "날씨": most_frequent(date_zero_wfKor),
-        "최저온도": str(date_zero_tmn),
-        "최고온도": str(date_zero_tmx),
-        "강수확률": str(round(date_zero_pop/date_zero_pop_cnt, -1))
-    },
-    {
-        "시간": date_one,
-        "날씨": most_frequent(date_one_wfKor),
-        "최저온도": str(date_one_tmn),
-        "최고온도": str(date_one_tmx),
-        "강수확률": str(round(date_one_pop/date_one_pop_cnt, -1))
-    },
-    {
-        "시간": date_two,
-        "날씨": most_frequent(date_two_wfKor),
-        "최저온도": str(date_two_tmn),
-        "최고온도": str(date_two_tmx),
-        "강수확률": str(round(date_two_pop/date_two_pop_cnt, -1))
-    }
-]
 
-# ---중기예보---
 
-res = requests.get(midterm_open_url)
-text = res.text
+# post_list = [
+#     {
+#         "시간": date_zero,
+#         "날씨": most_frequent(date_zero_wfKor),
+#         "최저온도": str(date_zero_tmn),
+#         "최고온도": str(date_zero_tmx),
+#         "강수확률": str(round(date_zero_pop/date_zero_pop_cnt, -1))
+#     },
+#     {
+#         "시간": date_one,
+#         "날씨": most_frequent(date_one_wfKor),
+#         "최저온도": str(date_one_tmn),
+#         "최고온도": str(date_one_tmx),
+#         "강수확률": str(round(date_one_pop/date_one_pop_cnt, -1))
+#     },
+#     {
+#         "시간": date_two,
+#         "날씨": most_frequent(date_two_wfKor),
+#         "최저온도": str(date_two_tmn),
+#         "최고온도": str(date_two_tmx),
+#         "강수확률": str(round(date_two_pop/date_two_pop_cnt, -1))
+#     }
+# ]
 
-soup = BeautifulSoup(text, 'lxml-xml')  # XML 파서
+# # ---중기예보---
 
-locations = soup.find_all('location')
+# res = requests.get(midterm_open_url)
+# text = res.text
 
-for location in locations:
-    location_text = location.find('city').text
-    if(location_text == "울산"):
-        data = location.find_all('data')
-        for datum in data:
-            print(location_text)  # 위치
-            print(datum.find('tmEf').text)  # 날짜 yyyy-mm-dd 00:00
-            print(datum.find('wf').text)  # 날씨예보
-            print('최저온도:' + datum.find('tmn').text + '°C')  # 최저온도
-            print('최고온도:' + datum.find('tmx').text + '°C')  # 최고온도
-            print('강수확률' + datum.find('rnSt').text + '%')  # 강수확률
-            post_list.append({
-                "시간": datum.find('tmEf').text,
-                "날씨": datum.find('wf').text,
-                "최저온도": datum.find('tmn').text,
-                "최고온도": datum.find('tmx').text,
-                "강수확률": datum.find('rnSt').text
-            },)
+# soup = BeautifulSoup(text, 'lxml-xml')  # XML 파서
 
-print(post_list)
+# locations = soup.find_all('location')
+
+# for location in locations:
+#     location_text = location.find('city').text
+#     if(location_text == "울산"):
+#         data = location.find_all('data')
+#         for datum in data:
+#             print(location_text)  # 위치
+#             print(datum.find('tmEf').text)  # 날짜 yyyy-mm-dd 00:00
+#             print(datum.find('wf').text)  # 날씨예보
+#             print('최저온도:' + datum.find('tmn').text + '°C')  # 최저온도
+#             print('최고온도:' + datum.find('tmx').text + '°C')  # 최고온도
+#             print('강수확률' + datum.find('rnSt').text + '%')  # 강수확률
+#             post_list.append({
+#                 "시간": datum.find('tmEf').text,
+#                 "날씨": datum.find('wf').text,
+#                 "최저온도": datum.find('tmn').text,
+#                 "최고온도": datum.find('tmx').text,
+#                 "강수확률": datum.find('rnSt').text
+#             },)
+
+# print(post_list)

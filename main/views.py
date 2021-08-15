@@ -3,7 +3,13 @@ from django.http import HttpResponse # 임시표기HttpResponse용
 from pymongo import MongoClient
 from django.http import JsonResponse
 from operator import itemgetter
+from bs4 import BeautifulSoup
+from selenium import webdriver
+from time import sleep
+# from main.models import HarborData
 import psycopg2
+import json
+import requests
 
 try:
     connection = psycopg2.connect("dbname='portwebsite_db' user='FIREMOTH' host='portwebsite.cictpybqx5bj.ap-northeast-2.rds.amazonaws.com' port='5432' password='glacksqnfskqkd1!'")
@@ -13,7 +19,7 @@ except:
 
 # Create your views here.
 def index(request):
-    return render(request, 'main/main_page.html',{**ShowingPortStatus(),**ShowingWeather()})
+    return render(request, 'main/main_page.html',{**ShowingPortStatus(),**ShowingWeather(),**AnchorageChart()})
     # return render(request, 'main/main_page.html',{**ShowingPortStatus()})
 
 def ShowingPortStatus():
@@ -38,15 +44,18 @@ def ShowingPortStatus():
 
     return dictionary
 
-ShowingPortStatus()
+# ShowingPortStatus()
 
 def ShowingWeather():
     cursor = connection.cursor()
     cursor.execute("SELECT * FROM wheather_current")
     data = cursor.fetchone()
+    print(data)
+    cursor.close()
+    cursor = connection.cursor()
     cursor.execute("SELECT * FROM today_weather_main")
     weather = cursor.fetchone()
-
+    print(weather)
     context = {
         "관측소명": data[0],
         "관측시간": data[1],
@@ -64,6 +73,34 @@ def ShowingWeather():
     cursor.close()
     return context
 
-print(ShowingWeather())
+# print(ShowingWeather())
+
+def AnchorageChart():
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM current_anchorage")
+    data = cursor.fetchall()
+    E1 = []
+    E2 = []
+    E3 = []
+    etc = []
+    print(data)
+    for d in data:
+        if d[12] == "정박지-E1":
+            E1.append(d)
+        elif d[12] == "정박지-E2":
+            E2.append(d)
+        elif d[12] == "정박지-E3":
+            E3.append(d)
+        else:
+            etc.append(d)
+        context = {
+        "E1_quantity": len(E1),
+        "E2_quantity": len(E2),
+        "E3_quantity": len(E3),
+        "etc_quantity": len(etc),
+    }
+    return context
+
+# print(AnchorageChart())
 
 # connection.close()

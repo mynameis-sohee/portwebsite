@@ -7,7 +7,6 @@ from django.http import JsonResponse
 import sys, os
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from crawling import imo_crawling
-
 # Create your views here.
 
 def index(request):       
@@ -78,7 +77,6 @@ def single_Vessel_position(request):
 
     else:
         return HttpResponse("GET이아님")
-
 # def test(request):
 
 #     context = {
