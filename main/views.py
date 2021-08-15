@@ -4,24 +4,6 @@ from pymongo import MongoClient
 from django.http import JsonResponse
 from operator import itemgetter
 import psycopg2
-# import json
-
-#--------------------------------------------------------------------------
-# db = client.portwebsite_dbz
-# collection = db.실시간_부두상황정보_울산신항
-# results = collection.find({'상태':'정상'},{'_id':False})
-# # dictionary = {str(i):test_list[i]for i in range(len(test_list))}
-# context = {'budu': results}
-# print(context)
-# # for result in results:
-# #     print(result)
-#----------------------------------------------------------------------------
-
-# db = client.portwebsite_db
-# collection = db.실시간_부두상황정보_울산신항
-# test_list = list(collection.find({'상태':'정상'},{'_id':False}))
-# dictionary = {str(i):test_list[i]for i in range(len(test_list))}
-# print(dictionary)
 
 try:
     connection = psycopg2.connect("dbname='portwebsite_db' user='FIREMOTH' host='portwebsite.cictpybqx5bj.ap-northeast-2.rds.amazonaws.com' port='5432' password='glacksqnfskqkd1!'")
@@ -80,9 +62,6 @@ def ShowingWeather():
     }
 
     cursor.close()
-    # weather_list = sorted(list(weather_collection.find({},{'_id':False})), key=itemgetter('관측_시간'),reverse=True)
-    # # weather_json = json.dumps(weather_list,ensure_ascii=False)
-    # context = weather_list[0]
     return context
 
 print(ShowingWeather())
