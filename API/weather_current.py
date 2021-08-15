@@ -56,4 +56,6 @@ post = {
     "돌풍" : wind_gust
 }
 
+print(post)
+
 post_id = collection.insert_one(post)

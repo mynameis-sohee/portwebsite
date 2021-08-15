@@ -16,7 +16,7 @@ chrome_options.add_argument('--headless')
 chrome_options.add_argument('--no-sandbox')
 chrome_options.add_argument("--single-process")
 chrome_options.add_argument("--disable-dev-shm-usage")
-path = '/home/ubuntu/crawling/chromedriver'
+path = '/home/ubuntu/portwebsite/crawling/chromedriver'
 driver = webdriver.Chrome(path, options=chrome_options)
 # -------------------------------------------------------------------------------------------------
 

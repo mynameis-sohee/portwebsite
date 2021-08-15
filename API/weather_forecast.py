@@ -3,6 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
 from pymongo import MongoClient
+import psycopg2
 
 
 dongnae_open_url = 'http://www.kma.go.kr/wid/queryDFSRSS.jsp?zone=3114067000'
@@ -17,16 +18,15 @@ def most_frequent(data):
     return max(data, key=data.count)
 # ---------
 
-
 # ---DB 세팅---
-client = MongoClient(
-    username='FIREMOTH',
-    password='glacksqnfskqkd1!'
-)
+try:
+    connection = psycopg2.connect("dbname='portwebsite_db' user='FIREMOTH' host='portwebsite.cictpybqx5bj.ap-northeast-2.rds.amazonaws.com' port='5432' password='glacksqnfskqkd1!'")
+    connection.autocommit = True
+except:
+    print("Not Connected!")
 
-db = client.portwebsite_db  # portwebsite_db가 우리 데이터베이스 이름
+cursor = connection.cursor()
 # --------
-
 
 # ---동네예보---
 res = requests.get(dongnae_open_url)
@@ -106,13 +106,23 @@ for data_seq in data_seqs:
 print(date_zero_wfKor)
 
 print(date_zero, most_frequent(date_zero_wfKor), date_zero_tmn,
-      date_zero_tmx, round(date_zero_pop/date_zero_pop_cnt, -1))
+date_zero_tmx, round(date_zero_pop/date_zero_pop_cnt, -1))
+
+todayis = most_frequent(date_zero_wfKor)
+print(todayis)
+print(type(todayis))
+
+cursor.execute("TRUNCATE TABLE today_weather_main;")
+cursor.execute("INSERT INTO today_weather_main (weather) VALUES (%s);", (todayis,))
 
 print(date_one, most_frequent(date_one_wfKor), date_one_tmn,
-      date_one_tmx, round(date_one_pop/date_one_pop_cnt, -1))
+date_one_tmx, round(date_one_pop/date_one_pop_cnt, -1))
 
 print(date_two, most_frequent(date_two_wfKor), date_two_tmn,
-      date_two_tmx, round(date_two_pop/date_two_pop_cnt, -1))
+date_two_tmx, round(date_two_pop/date_two_pop_cnt, -1))
+
+
+
 
 post_list = [
     {
@@ -137,6 +147,7 @@ post_list = [
         "강수확률": str(round(date_two_pop/date_two_pop_cnt, -1))
     }
 ]
+
 # ---중기예보---
 
 res = requests.get(midterm_open_url)
@@ -165,8 +176,4 @@ for location in locations:
                 "강수확률": datum.find('rnSt').text
             },)
 
-#---DB 삽입---
-db.울산일기예보.drop()  # 콜랙선 초기화(최신의 일기예보만 저장하기 위해)
-collection = db.울산일기예보
-posts = db.울산일기예보
-post_id = posts.insert_many(post_list)
+print(post_list)

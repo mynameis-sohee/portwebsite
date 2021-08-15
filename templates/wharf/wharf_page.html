@@ -14,15 +14,42 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300&display=swap" rel="stylesheet">
   <!-- 폰트 끝 -->
+  <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=clkjj6mzd0"></script>
+  <script src=" https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 <style>
   * {
     font-family: 'Noto Sans KR', sans-serif;
   }
+  #map {
+    width: 100%;
+    height: 500px;
+    float: right;
+  }
 
   
 </style>
+<script>
+  let map
+  $(document).ready(function () {
+    map = new naver.maps.Map('map', {
+      center: new naver.maps.LatLng(35.44043374181368, 129.3934977814075),
+      zoom: 10,
+      zoomControl: true,
+      zoomControlOptions: {
+        style: naver.maps.ZoomControlStyle.SMALL,
+        position: naver.maps.Position.TOP_RIGHT
+      }
 
+    });
+  })
+  function markerMaking(){
+    let marker = new naver.maps.Marker({
+      position: new naver.maps.LatLng(35.526908,129.373515),
+      map: map
+    });
+  }
+</script>
 <body>
   <!-- 네비게이션바 시작 -->
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -51,6 +78,8 @@
     </div>
   </nav>
   <!-- 네비게이션바 끝 -->
+  <div id="map">    
+  </div>
 </body>
 
 </html>
