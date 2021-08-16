@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.http import HttpResponse # 임시표기HttpResponse용 
-from pymongo import MongoClient
 from django.http import JsonResponse
 from operator import itemgetter
 from bs4 import BeautifulSoup

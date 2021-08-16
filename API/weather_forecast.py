@@ -2,7 +2,6 @@
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
-from pymongo import MongoClient
 import psycopg2
 
 
