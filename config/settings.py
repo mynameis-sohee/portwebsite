@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,7 +26,7 @@ SECRET_KEY = 'django-insecure-wdif=35=8pa7+-^2moz1-iox7mp-d^%n0mnoj5$jw428(@_kgf
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['3.36.47.85','127.0.0.1','localhost']
+ALLOWED_HOSTS = ['15.165.34.133','127.0.0.1','localhost']
 
 
 # Application definition
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'sass_processor',
 ]
 
 MIDDLEWARE = [
@@ -157,8 +159,12 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
+SASS_PROCESSOR_ENABLED = True
+
 
 STATIC_URL = '/static/'
+SASS_PROCESSOR_ROOT = os.path.join(BASE_DIR, 'static')
+
 
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
