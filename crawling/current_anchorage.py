@@ -12,7 +12,6 @@ except:
     print("Not Connected!")
 
 cursor = connection.cursor()
-cursor.execute("TRUNCATE TABLE today_weather_main;")
 # --------
 
 options = webdriver.ChromeOptions()
@@ -56,6 +55,7 @@ sleep(1)
 
 save_dict={}
 cnt = 1
+cursor.execute("TRUNCATE TABLE current_anchorage;")
 for num in range(15):
     req = driver.page_source
     soup = BeautifulSoup(req, 'html.parser')  # 가져온 정보를 beautifulsoup로 파싱
@@ -70,7 +70,7 @@ for num in range(15):
                     temp_dict[j] = None
             except AttributeError:
                 break
-        if cnt == int(temp_dict[0]):
+        if cnt == int(temp_dict[0]): #한번에 들어가도록 수정
             cursor.execute("INSERT INTO current_anchorage (순번,호출부호,입항년도,입항횟수,선명,국적,imo번호,총톤수,총길이,선박종류,선박구분,선종분류,계선장소,입항일시_관제,입항최초신고시간,입항최초허가일시,선사_대리점,신고구분,부두구분) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);", (temp_dict[0],temp_dict[1],temp_dict[2],temp_dict[3],temp_dict[4],temp_dict[5],temp_dict[6],temp_dict[7],temp_dict[8],temp_dict[9],temp_dict[10],temp_dict[11],temp_dict[12],temp_dict[13],temp_dict[14],temp_dict[15],temp_dict[16],temp_dict[17],temp_dict[18]))
             save_dict[cnt-1] = temp_dict
             print(temp_dict)

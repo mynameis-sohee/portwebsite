@@ -6,8 +6,6 @@ from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 import pandas
 from urllib.parse import urlencode, quote_plus
-from pymongo import MongoClient
-import pymongo
 
 # 국립해양측위정보원 해양기상 정보서비스
 # https://marineweather.nmpnt.go.kr/serviceReq/serviceOpenApiIntro.do

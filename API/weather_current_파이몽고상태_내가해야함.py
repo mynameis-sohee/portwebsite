@@ -1,5 +1,4 @@
 import requests
-from pymongo import MongoClient
 
 # 조위관측소 최신 관측데이터(울산)
 # https://www.khoa.go.kr/oceangrid/member/mypage/selectOpenApiState.do?isCreate=true

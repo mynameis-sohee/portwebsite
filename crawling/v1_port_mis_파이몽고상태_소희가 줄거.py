@@ -4,7 +4,6 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
 import datetime
-from pymongo import MongoClient
 
 # 사용시설현황
 
@@ -17,7 +16,7 @@ chrome_options.add_argument('--headless')
 chrome_options.add_argument('--no-sandbox')
 chrome_options.add_argument("--single-process")
 chrome_options.add_argument("--disable-dev-shm-usage")
-path = '/home/ubuntu/crawling/chromedriver'
+path = '/home/ubuntu/portwebsite/crawling/chromedriver'
 driver = webdriver.Chrome(path, options=chrome_options)
 # -------------------------------------------------------------------------------------------------
 
@@ -152,7 +151,7 @@ for value in save_dict.values():
         "지정일시(TO)": value['key_18'],
         "사용목적명": value['key_19'],
         "예보일시": value['key_20'],
-        "허가유무": value['key_21'],      
+        "허가유무": value['key_21'],
     })
 
 

@@ -104,15 +104,22 @@ for data_seq in data_seqs:
 
 print(date_zero_wfKor)
 
-print(date_zero, most_frequent(date_zero_wfKor), date_zero_tmn,
-date_zero_tmx, round(date_zero_pop/date_zero_pop_cnt, -1))
+try:
+    print(date_zero, most_frequent(date_zero_wfKor), date_zero_tmn,
+    date_zero_tmx, round(date_zero_pop/date_zero_pop_cnt, -1))
 
-todayis = most_frequent(date_zero_wfKor)
+    todayis = most_frequent(date_zero_wfKor)
+
+    cursor.execute("TRUNCATE TABLE today_weather_main;")
+    cursor.execute("INSERT INTO today_weather_main (weather) VALUES (%s);", (todayis,))
+except ValueError:
+    print(date_one, most_frequent(date_one_wfKor), date_one_tmn,
+    date_one_tmx, round(date_one_pop/date_one_pop_cnt, -1))
+
+    todayis = most_frequent(date_one_wfKor)
+
 print(todayis)
 print(type(todayis))
-
-cursor.execute("TRUNCATE TABLE today_weather_main;")
-cursor.execute("INSERT INTO today_weather_main (weather) VALUES (%s);", (todayis,))
 
 # print(date_one, most_frequent(date_one_wfKor), date_one_tmn,
 # date_one_tmx, round(date_one_pop/date_one_pop_cnt, -1))
