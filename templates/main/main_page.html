@@ -24,6 +24,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300&display=swap" rel="stylesheet">
   <!-- 폰트 끝 -->
+  <!-- 다른폰트 시작 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gamja+Flower&display=swap" rel="stylesheet">
+  <!-- 다른 폰트 끝 -->
   {% comment %}
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script> {% endcomment %}
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.0/dist/chart.min.js"></script>
@@ -36,12 +41,14 @@
   <link rel="stylesheet" href="{% static 'src/css/vendors_css.css' %}">
   <!--Custom JS-->
   <script src="{% static 'ShowingHarbor.js' %}"></script>
+
   {% load sass_tags %}
   <link rel="stylesheet" href="{% sass_src 'weather_test.scss' %}">
 </head>
 <style>
   * {
-    font-family: 'Noto Sans KR', sans-serif;
+    font-family: 'Gamja Flower', cursive;
+    /*font-family: 'Noto Sans KR', sans-serif;*/
   }
 
   #map {
@@ -49,25 +56,36 @@
     height: 500px;
     float: right;
   }
+
+  .tab {
+    overflow: hidden;
+  }
+
+  /* Style the buttons that are used to open the tab content */
+  .tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+  }
+
+
+
+  /* Style the tab content */
+  .tabcontent {
+    display: none;
+    border: 1px solid #ccc;
+    border-top: none;
+  }
 </style>
 <script>
   let a = 0
   let map //네이버 지도 오브젝트(전역으로 해야됨)
   $(document).ready(function () {
     ShowingStatus()
-    $.ajax({
-      type: 'GET',
-      url: "{% url 'GetHarborData' %}",
-      dataType: "json",
-      data: {},
-      error: function () {
-        alert("오류!")
-      },
-      success: function (data) {
-        data_json = data
-        console.log(data_json['date'])
-      }
-    })
     map = new naver.maps.Map('map', {
       center: new naver.maps.LatLng(35.44043374181368, 129.3934977814075),
       zoom: 10,
@@ -78,7 +96,49 @@
       }
 
     });
+    ShowingHarbor()
+    HarborChooseFunction()
+    document.getElementById("defaultOpen").click();
   })
+
+  function HarborChooseFunction() {
+    $(".list-group-item-action").click(function () {
+      let abc = $(this).val();
+      $('#harbor_name').empty()
+      $('#harbor_name').append(`${abc} 작업현황`)
+      $.ajax({
+        type: 'GET',
+        url: "{% url 'GetHarborData' %}",
+        dataType: "json",
+        data: {
+          'HarborName': $(this).val()
+        },
+        error: function () {
+          alert("오류!")
+        },
+        success: function (data) {
+          data_json = data
+          let latitude = data_json['latitude']
+          let longitude = data_json['longitude']
+          map.setCenter(new naver.maps.LatLng(latitude, longitude))
+          map.setZoom(16, true)
+          $('#shipInfo').empty();
+          for (let i = 0; i < data_json['date'].length; i++) {
+            let date = data_json['date'][i]
+            let shipname = data_json['shipname'][i]
+            let worktype = data_json['worktype'][i]
+            temp_html = `<tr>
+                              <th scope="row">${i+1}</th>
+                              <td>${date}</td>
+                              <td>${shipname}</td>
+                              <td>${worktype}</td>
+                           </tr>`
+            $('#shipInfo').append(temp_html)
+          }
+        }
+      })
+    });
+  }
 
   function ShowingStatus() {
     var port_name = "{{항구이름|escapejs}}"
@@ -135,6 +195,27 @@
     inputstring = inputstring.replace(/'/gi, '');
     return inputstring.split(",");
   }
+
+  function openCity(evt, cityName) {
+    // Declare all variables
+    var i, tabcontent, tablinks;
+
+    // Get all elements with class="tabcontent" and hide them
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+
+    // Get all elements with class="tablinks" and remove the class "active"
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+
+    // Show the current tab, and add an "active" class to the button that opened the tab
+    document.getElementById(cityName).style.display = "block";
+    evt.currentTarget.className += " active";
+  }
 </script>
 
 <body class="hold-transition sidebar-mini theme-primary fixed">
@@ -183,7 +264,7 @@
             <div class="col-xl-6 col-xxxl-6">
               <div class="box">
                 <div class="box-header">
-                  <h3 class="box-title">실시간 부두상태</h3>
+                  <h3 class="box-title"><span>실시간 부두상태</span></h3>
                 </div>
                 <div class="box-body">
 
@@ -191,7 +272,7 @@
                     <canvas id="myChart1" style="height:300px;width:300px;display:block;"></canvas>
                   </div>
 
-                  <h1>일부 파손</h1>
+                  <h1><span>일부 파손</span></h1>
                   <li>OTK2부두2선석</li>
 
 
@@ -199,85 +280,69 @@
               </div>
               <div class="box">
                 <div class="box-header">
-                  <h3 class="box-title">부두 작업현황</h3>
+                  <div class="tab">
+                    <button type="button" class="btn btn-outline-primary tablinks" onclick="openCity(event, 'list-tab')"
+                      id="defaultOpen">
+                      <h3><span>부두별 작업 현황</span></h3>
+                    </button>
+                    <button type="button" class="btn btn-outline-primary tablinks"
+                      onclick="openCity(event, 'shipSearch')">
+                      <h3><span>실시간 선박위치 추적</span></h3>
+                    </button>
+                  </div>
                 </div>
                 <div class="box-body" style="padding:0%">
                   <div class="row" style="margin:0%">
-                    <div class="col-xl-4 list-group" id="list-tab" role="tablist" style="padding:0rem">
-                      <h3 style="text-align: center;">부두목록</h3>
-                      <div class="inner-content-div">
-                        <a class="list-group-item list-group-item-action" id="list-home-list" data-bs-toggle="list"
-                          href="#list-home" role="tab" aria-controls="list-home">제1부두</a>
-                        <a class="list-group-item list-group-item-action" id="list-profile-list" data-bs-toggle="list"
-                          href="#list-profile" role="tab" aria-controls="list-profile">제2부두</a>
-                        <a class="list-group-item list-group-item-action" id="list-messages-list" data-bs-toggle="list"
-                          href="#list-messages" role="tab" aria-controls="list-messages">제3부두</a>
-                        <a class="list-group-item list-group-item-action" id="list-settings-list" data-bs-toggle="list"
-                          href="#list-settings" role="tab" aria-controls="list-settings" onclick="test()">제4부두</a>
-                        <a class="list-group-item list-group-item-action" id="list-messages-list" data-bs-toggle="list"
-                          href="#list-messages" role="tab" aria-controls="list-messages">제5부두</a>
-                        <a class="list-group-item list-group-item-action" id="list-messages-list" data-bs-toggle="list"
-                          href="#list-messages" role="tab" aria-controls="list-messages">제6부두</a>
-                        <a class="list-group-item list-group-item-action" id="list-messages-list" data-bs-toggle="list"
-                          href="#list-messages" role="tab" aria-controls="list-messages">제7부두</a>
-                        <a class="list-group-item list-group-item-action" id="list-messages-list" data-bs-toggle="list"
-                          href="#list-messages" role="tab" aria-controls="list-messages">제8부두</a>
-                        <a class="list-group-item list-group-item-action" id="list-messages-list" data-bs-toggle="list"
-                          href="#list-messages" role="tab" aria-controls="list-messages">제9부두</a>
-                        <a class="list-group-item list-group-item-action" id="list-messages-list" data-bs-toggle="list"
-                          href="#list-messages" role="tab" aria-controls="list-messages">제10부두</a>
-
+                    <div class="col-xl-4 list-group overflow-scroll tabcontent" id="list-tab" role="tablist"
+                      style="padding:0rem">
+                      <h3 style="text-align: center;"><span>부두목록</span></h3>
+                      <button type="button" class="list-group-item list-group-item-action" value="제1부두">제1부두</button>
+                      <button type="button" class="list-group-item list-group-item-action" value="제2부두">제2부두</button>
+                      <button type="button" class="list-group-item list-group-item-action" value="제3부두">제3부두</button>
+                      <button type="button" class="list-group-item list-group-item-action" value="제4부두">제4부두</button>
+                      <button type="button" class="list-group-item list-group-item-action" value="제5부두">제5부두</button>
+                      <button type="button" class="list-group-item list-group-item-action" value="제6부두">제6부두</button>
+                      <button type="button" class="list-group-item list-group-item-action" value="제7부두">제7부두</button>
+                    </div>
+                    <div class="col-xl-4 tabcontent" id="shipSearch">
+                      <div class="input-group">
+                        <input type="text" class="form-control" placeholder="선박 호출부호" aria-describedby="basic-addon2"
+                          id="shipCallCode">
+                        <button type="button" class="btn btn-primary" id="search_button">검색</button>
                       </div>
-                      <h3 style="text-align: center; background-color:lightcyan;">제2부두 작업현황</h3>
-                      <table class="table">
-                        <thead>
-                          <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">선석</th>
-                            <th scope="col">사용유무</th>
-                            <th scope="col">최근 관제</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <th scope="row">1</th>
-                            <td>01</td>
-                            <td>사용중</td>
-                            <td>SUBARU 7(접안)</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">2</th>
-                            <td>02</td>
-                            <td>사용중</td>
-                            <td>CLIPPER ORION(접안)</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">3</th>
-                            <td colspan="1">03</td>
-                            <td>비었음</td>
-                            <td>GINGA CARACAL(출항)</td>
-                          </tr>
-                        </tbody>
-                      </table>
+                      <div id="card_position" style="height: 100%;">
+                      </div>
                     </div>
                     <div class="col-xl-8" style="padding:0px">
                       <div id="map"></div>
                     </div>
                   </div>
+                  <h3 id="harbor_name" style="text-align: center; background-color:lightcyan;"><span>제2부두 작업현황</span></h3>
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">관제시각</th>
+                        <th scope="col">선박 이름</th>
+                        <th scope="col">작업 종류</th>
+                      </tr>
+                    </thead>
+                    <tbody id="shipInfo">
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
             <div class="col-xl-6" style="padding:0">
-              <div class="box bg-img box-inverse" style="background-image: url(../../../images/gallery/thumb/4.jpg);"
-                data-overlay="5">
+              <div class="box" data-overlay="5">
                 <div class="box-header">
-                  <h3 class="box-title">오늘의 날씨</h3>
+                  <h3 class="box-title"><span>오늘의 날씨</span></h3>
                 </div>
                 <div class="box-body">
                   <div class="row">
                     <div class="p-5 col-xl-4">
                       <h3 class="white">
-                        <span class="fs-30">울산, </span>대한민국
+                        <span class="fs-30">울산, </span><span>대한민국</span>
                       </h3>
                       <p class="weather-day-date mb-30">
                         <span class="me-5">{{관측시간}}</span>
@@ -523,16 +588,16 @@
                     </div>
                     <div class="col-xl-8">
                       <h3>
-                        관측시간: {{관측시간}} <br>
-                        관측소 명: {{관측소명}}<br>
-                        조위: {{조위}}cm <br>
-                        수온: {{수온}}℃ <br>
-                        염분: {{염분}}psu <br>
-                        기온: {{기온}}℃ <br>
-                        기압: {{기압}}hPa <br>
-                        풍향: {{풍향}}deg <br>
-                        풍속: {{풍속}}m/s <br>
-                        돌풍: {{돌풍}}m/s<br>
+                        <span>관측시간: {{관측시간}} <br></span>
+                        <span>관측소 명: {{관측소명}}<br></span>
+                        <span>조위: {{조위}}cm <br></span>
+                        <span>수온: {{수온}}℃ <br></span>
+                        <span>염분: {{염분}}psu <br></span>
+                        <span>기온: {{기온}}℃ <br></span>
+                        <span>기압: {{기압}}hPa <br></span>
+                        <span>풍향: {{풍향}}deg <br></span>
+                        <span>풍속: {{풍속}}m/s <br></span>
+                        <span>돌풍: {{돌풍}}m/s<br></span>
                       </h3>
                     </div>
                   </div>
@@ -597,7 +662,7 @@
               </div>
               <div class="box">
                 <div class="box-header">
-                  <h3 class="box-title">정박지 현황</h3>
+                  <h3 class="box-title"><span>정박지 현황</span></h3>
                 </div>
                 <div class="card-body">
                   <div class="row">
@@ -605,19 +670,19 @@
                       <input class="knob" data-width="150" data-height="150" data-linecap="round" data-fgColor="#3e8ef7"
                         value="{{ E1_quantity | safe }}" data-skin="tron" data-angleOffset="180" data-readOnly="true"
                         data-thickness=".1" />
-                      <h1>정박지 E1</h1>
+                      <h1><span>정박지 E1</span></h1>
                     </div>
                     <div class="text-center col-xl-4">
                       <input class="knob" data-width="150" data-height="150" data-linecap="round" data-fgColor="#3e8ef7"
                         value="{{ E2_quantity | safe }}" data-skin="tron" data-angleOffset="180" data-readOnly="true"
                         data-thickness=".1" />
-                      <h1>정박지 E2</h1>
+                      <h1><span>정박지 E2</span></h1>
                     </div>
                     <div class="text-center col-xl-4">
                       <input class="knob" data-width="150" data-height="150" data-linecap="round" data-fgColor="#3e8ef7"
                         value="{{ E3_quantity | safe }}" data-skin="tron" data-angleOffset="180" data-readOnly="true"
                         data-thickness=".1" />
-                      <h1>정박지 E3</h1>
+                      <h1><span>정박지 E3</span></h1>
                     </div>
                   </div>
                 </div>
@@ -664,6 +729,7 @@
   <script src="{% static 'src/js/pages/weather.js' %}"></script>
   <script src="{% static 'src/js/pages/widget-charts2.js' %}"></script>
   <script src="{% static 'src/js/pages/widget-inline-charts.js' %}"></script>
+
 </body>
 
 </html>

@@ -1,12 +1,10 @@
-/*window.onload = function(){
-    let marker = new naver.maps.Marker({
-        position: new naver.maps.LatLng(35.44043374181368,129.3934977814075),
-        map: map
-      });
-}*/
-window.onload = function ShowingData() {
-  ShowingHarbor()
-}
+let HarborLatArray = [35.528672, 35.526908, 35.522900, 35.52172551482321, 35.519438, 35.517193]
+let HarborLonArray = [129.375364, 129.373515, 129.373701, 129.37551417157238, 129.374956, 129.376094]
+let HarborName = ['제1부두', '제2부두', '제3부두', '제4부두', '제5부두', '제6부두']
+let HarborMainCode = ['MB1', 'MB2', 'MB3', 'MB4', 'MB5', 'MB6']
+//let HarborSubCode=[['01','02'],['01','02','03'],['01','02'],['01','02'],['01'],['01','02','03']]
+let HarborSubCode = ['01', '01', '01', '01', '01', '01']
+
 
 function ShowingHarbor() {
   let marker = new naver.maps.Marker({
@@ -31,10 +29,11 @@ function ShowingHarbor() {
     });
   }
 }
+function ClickHarbor() {
+  
+}
 
-let HarborLatArray = [35.528672, 35.526908, 35.522900, 35.52172551482321, 35.519438, 35.517193]
-let HarborLonArray = [129.375364, 129.373515, 129.373701, 129.37551417157238, 129.374956, 129.376094]
-let HarborName = ['제1부두', '제2부두', '제3부두', '제4부두', '제5부두', '제6부두']
-let HarborMainCode = ['MB1', 'MB2', 'MB3', 'MB4', 'MB5', 'MB6']
-//let HarborSubCode=[['01','02'],['01','02','03'],['01','02'],['01','02'],['01'],['01','02','03']]
-let HarborSubCode = ['01', '01', '01', '01', '01', '01']
+
+
+
+
