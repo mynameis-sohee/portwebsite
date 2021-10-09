@@ -1,3 +1,7 @@
+'''
+cron 주기 : 10분에 1회
+'''
+
 import requests
 
 # 조위관측소 최신 관측데이터(울산)
@@ -14,7 +18,6 @@ open_url = 'http://www.khoa.go.kr/oceangrid/grid/api/tideObsRecent/search.do?Ser
 r = requests.get(open_url)
 weather = r.json()
 
-print(weather)
 
 meta = weather['result']['meta']
 data = weather['result']['data']
@@ -32,29 +35,31 @@ wind_dir = data['wind_dir'] # 풍향 deg
 wind_speed = data['wind_speed'] # 풍속 m/s
 wind_gust = data['wind_gust'] #돌풍 m/s
 
-client = MongoClient(
-    username='FIREMOTH',
-    password='glacksqnfskqkd1!'
+
+
+
+import psycopg2
+
+con = psycopg2.connect(
+    host = "portwebsite.cictpybqx5bj.ap-northeast-2.rds.amazonaws.com",
+    database = "portwebsite_db",
+    user = "FIREMOTH",
+    password = "glacksqnfskqkd1!",
+    port = 5432
 )
 
+cur = con.cursor()
 
-db = client.portwebsite_db # portwebsite_db가 우리 데이터베이스 이름
-collection = db.현재날씨# 콜렉션 정의
+cur.execute("SELECT id, 시간 FROM wheather_present_to_past ORDER BY id DESC LIMIT 1")
+row = cur.fetchall()
 
+if row:
+    print(row)
+    cnt = row[0][0]+1
+else:
+    cnt = 1
 
-post = {
-    "관측소_명" : obs_post_name,
-    "관측_시간" : record_time,
-    "조위" : tide_level,
-    "수온" : water_temp,
-    "염분" : Salinity,
-    "기온" : air_temp,
-    "기압" : air_press,
-    "풍향" : wind_dir,
-    "풍속" : wind_speed,
-    "돌풍" : wind_gust
-}
+cur.execute("INSERT INTO wheather_current (id, 관측소_명, 관측_시간, 조위, 수온, 염분, 기온, 기압, 풍향, 풍속, 돌풍 ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s )", (cnt, obs_post_name, record_time, tide_level, water_temp, Salinity, air_temp, air_press, wind_dir, wind_speed,wind_gust))
+con.commit()
 
-print(post)
-
-post_id = collection.insert_one(post)
+con.close()

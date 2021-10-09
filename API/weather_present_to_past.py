@@ -1,3 +1,8 @@
+### DB 연동 완료 
+'''
+cron 주기 : 1일 5회, 3시간에 1번. 변동 사항 생길 때마다 insert.
+'''
+
 # 폐기지만 혹시 모르니 남겨둡니다..
 
 from warnings import resetwarnings
@@ -39,7 +44,7 @@ recent_weather = 'http://marineweather.nmpnt.go.kr:8001/openWeatherNow.do?servic
 
 past_weather_pre = 'http://apis.data.go.kr/1360000/AsosHourlyInfoService/getWthrDataList'
 queryParams = '?' + urlencode({quote_plus('ServiceKey'): 'BQbARTGT5QG2jla7rNWHXeDuEUo4H6FSZAY4NX461tepYo6UihfFcWakHW/ZuwuMd/B8HYbGpXYeKuA/4ftHvw==', quote_plus('pageNo'): '40', quote_plus('numOfRows'): '999',
-                            quote_plus('dataType'): 'JSON', quote_plus('dataCd'): 'ASOS', quote_plus('dateCd'): 'HR', quote_plus('startDt'): 20170101,
+                            quote_plus('dataType'): 'JSON', quote_plus('dataCd'): 'ASOS', quote_plus('dateCd'): 'HR', quote_plus('startDt'): today_is,
                             quote_plus('startHh'): '01', quote_plus('endDt'): today_is, quote_plus('endHh'): '01', quote_plus('stnIds'): '152'})
 # 서비스키 BQbARTGT5QG2jla7rNWHXeDuEUo4H6FSZAY4NX461tepYo6UihfFcWakHW%2FZuwuMd%2FB8HYbGpXYeKuA%2F4ftHvw%3D%3D or BQbARTGT5QG2jla7rNWHXeDuEUo4H6FSZAY4NX461tepYo6UihfFcWakHW/ZuwuMd/B8HYbGpXYeKuA/4ftHvw==
 # 위의 둘중 하나를 사용 어느걸 사용해야하는지는 자기네들도 모르니 둘다 시도해보라함
@@ -57,52 +62,36 @@ try:
 except KeyError:
     pass
 
-#---DB삽입---
+#---DB삽입--
 
-client = MongoClient(
-    username='FIREMOTH',
-    password='glacksqnfskqkd1!'
+import psycopg2
+
+con = psycopg2.connect(
+    host = "portwebsite.cictpybqx5bj.ap-northeast-2.rds.amazonaws.com",
+    database = "portwebsite_db",
+    user = "FIREMOTH",
+    password = "glacksqnfskqkd1!",
+    port = 5432
 )
 
+cur = con.cursor()
+cur.execute("SELECT id, 시간 FROM wheather_present_to_past ORDER BY id DESC LIMIT 1")
+row = cur.fetchall()
 
-db = client.portwebsite_db # portwebsite_db가 우리 데이터베이스 이름
-collection = db.과거날씨_데이터 #20170101~20210708
+if row:
+    print(row)
+    cnt = row[0][0]+1
+else:
+    cnt = 1
 
 
-for w in weather_past['item']:
-    # print("지점 번호(종관기상관측 지점 번호): " + w["stnId"])
-    # print("시간(yyyy-mm-dd hh:mm)" + w["tm"])
-    # print("지점명(종관기상관측 지점명)" + w["stnNm"])
-    # print("적설" + w["dsnw"])
-    # print("일조" + w["ss"])
-    # print("해면기압" + w["ps"])
-    # print("현지기압" + w["pa"])
-    # print("습도" + w["hm"])
-    # print("풍향" + w["wd"])
-    # print("풍속" + w["ws"])
-    # print("강수량" + w["rn"])
-    # print("기온" + w["ta"])
-    weather_dic = {
-        "지점 번호(종관기상관측 지점 번호): " : w["stnId"],
-        "시간(yyyy-mm-dd hh:mm)" : w["tm"],
-        "지점명(종관기상관측 지점명)" : w["stnNm"],
-        "적설" : w["dsnw"],
-        "일조" : w["ss"],
-        "해면기압" : w["ps"],
-        "현지기압" : w["pa"],
-        "습도" : w["hm"],
-        "풍향" : w["wd"],
-        "풍속" : w["ws"],
-        "강수량" : w["rn"],
-        "기온" : w["ta"],
-    }
-    try:
-        post_id = collection.insert_one(weather_dic)
-    except pymongo.errors.DuplicateKeyError:
-        continue
-        # for doc in collection.find():
-        #     client.update_one({'_id': doc['_id']}, doc, upsert=True)
+last_id = row[0][1].split()[0].replace("-","")
 
-    # today_date = today_date + relativedelta(months=-1)  # 오늘 날짜 datetime형태
-    # today_is = today_date.strftime("%Y%m%d")  # 오늘 날짜 YYmmdd형태
-    
+if last_id != today_is:
+    for w in weather_past['item']:
+        cur.execute("INSERT INTO wheather_present_to_past (지점번호, 시간, 지점명, 적설, 일조, 해면기압, 현지기압, 습도, 풍향, 풍속, 강수량, 기온, id ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s )", (w["stnId"], w["tm"], w["stnNm"], w["dsnw"], w["ss"], w["ps"], w["pa"], w["hm"], w["wd"], w["ws"], w["rn"], w["ta"], cnt ))
+        cnt += 1
+        con.commit()
+        print('done')
+
+con.close()

@@ -8,18 +8,28 @@
   <title>부두 현황</title>
   {% load static %}
   <link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
-  <script src="{% static 'bootstrap.min.js' %}"></script>
   <!-- 폰트시작 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300&display=swap" rel="stylesheet">
   <!-- 폰트 끝 -->
+  <!-- 다른폰트 시작 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gamja+Flower&display=swap" rel="stylesheet">
+  <!-- 다른 폰트 끝 -->
   <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=clkjj6mzd0"></script>
   <script src=" https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!--CRMi Style-->
+    <link rel="stylesheet" href="{% static 'src/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'src/css/skin_color.css' %}">
+    <!-- Vendors Style-->
+    <link rel="stylesheet" href="{% static 'src/css/vendors_css.css' %}">
 </head>
 <style>
   * {
-    font-family: 'Noto Sans KR', sans-serif;
+    font-family: 'Gamja Flower', cursive;
+    /*font-family: 'Noto Sans KR', sans-serif;*/
   }
   #map {
     width: 100%;
@@ -29,57 +39,162 @@
 
   
 </style>
-<script>
-  let map
-  $(document).ready(function () {
-    map = new naver.maps.Map('map', {
-      center: new naver.maps.LatLng(35.44043374181368, 129.3934977814075),
-      zoom: 10,
-      zoomControl: true,
-      zoomControlOptions: {
-        style: naver.maps.ZoomControlStyle.SMALL,
-        position: naver.maps.Position.TOP_RIGHT
-      }
-
-    });
-  })
-  function markerMaking(){
-    let marker = new naver.maps.Marker({
-      position: new naver.maps.LatLng(35.526908,129.373515),
-      map: map
-    });
-  }
-</script>
 <body>
-  <!-- 네비게이션바 시작 -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="{% url 'main' %}">서비스명</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'anchorage' %}">정박지 현황</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'ship_position' %}">실시간 선박 위치 추적</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">부두 현황</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'safety' %}">안전 재난경보</a>
-          </li>
-        </ul>
+    <!-- 네비게이션바 시작 -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'main' %}" style="font-size: xx-large;">힘찬불나방</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'anchorage' %}" style="font-size: x-large;padding-left: 50px;">정박지 현황</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'wharf' %}" style="font-size: x-large;padding-left: 50px;">부두 현황</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- 네비게이션바 끝 -->
+
+    <!--컨테이너 수송량 예측 시작-->
+    <div class="card border-3 border-primary" style="margin-left:12px;">
+      <div class="card-body">
+        <h2>컨테이너 수송량 예측</h2>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="container1">년도</span>
+          </div>
+          <input type="text" class="form-control" id="container1-input">
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="container2">달</span>
+          </div>
+          <input type="text" class="form-control" id="container2-input">
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="container3">국적선/외국선</span>
+          </div>
+          <input type="text" class="form-control" id="container3-input">
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="container4">FT</span>
+          </div>
+          <input type="text" class="form-control" id="container4-input">
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="container5">공/적</span>
+          </div>
+          <input type="text" class="form-control" id="container5-input">
+        </div>
+        <button type="button" class="btn btn-primary" id="container-search"
+          onclick="">검색</button>
+      </div>
+      <div  id="container-result"style="
+      position: relative;
+      left: 23px;
+      margin-bottom: 40px;
+      margin-top: 40px;
+      font-size: 60px;
+      display: none;
+      ">
       </div>
     </div>
-  </nav>
-  <!-- 네비게이션바 끝 -->
-  <div id="map">    
-  </div>
+    <!--컨테이너 수송량 예측 끝-->
+
+        <!--정박지 대기율 예측 예측 시작-->
+        <!-- <div class="card border-3 border-primary" style="margin-left:12px;">
+          <div class="card-body">
+            <h2>정박지 대기율 예측</h2>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon3">신고톤수</span>
+              </div>
+              <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+            </div>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon3">차항치</span>
+              </div>
+              <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+            </div>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon3">선박용도</span>
+              </div>
+              <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+            </div>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon3">servicenum</span>
+              </div>
+              <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+            </div>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon3">waitingnum</span>
+              </div>
+              <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+            </div>
+            <button type="button" class="btn btn-primary"
+              onclick="ShowingAnchor(1,1);ShowingAnchor(2,1);ShowingAnchor(3,1)">검색</button>
+          </div>
+        </div> -->
+        <!--정박지 대기율 예측 끝-->
 </body>
+
+<script>
+  //컨테이너 수송량 검색
+  $(document).on("click", "#container-search", function () {
+    let search_key1 = $('#container1-input').val()
+    let search_key2 = $('#container2-input').val()
+    let search_key3 = $('#container3-input').val()
+    let search_key4 = $('#container4-input').val()
+    let search_key5 = $('#container5-input').val()
+
+    console.log(search_key1)
+    console.log(search_key2)
+    console.log(search_key3)
+    console.log(search_key4)
+    console.log(search_key5)
+
+    $.ajax({
+      type: 'GET',
+      url: "{% url 'container_predict' %}",
+      dataType: "json",
+      data: {
+        'search_key1': search_key1,
+        'search_key2': search_key2,
+        'search_key3': search_key3,
+        'search_key4': search_key4,
+        'search_key5': search_key5,
+      },
+      error: function () {
+        // 선박명이 없는경우 response에 실패
+        alert("에러")
+      },
+      success: function (data) {
+        $('#container-result').css("display", "block");
+        $('#container-result').empty();
+        //$('#container-result').append("일단 이런 느낌으로 출력이 나온다고 합니다.")
+
+        data_json = data
+
+        result = data_json['result']
+
+        $('#container-result').append(result)
+      }
+    })
+  })
+</script>
 
 </html>
