@@ -13,6 +13,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300&display=swap" rel="stylesheet">
   <!-- 폰트 끝 -->
+  <!-- 차트  js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.0/dist/chart.min.js"></script>
+  <!-- 차트  js 끝-->
   <!-- 다른폰트 시작 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -92,7 +95,7 @@
         </div>
         <div class="input-group mb-3">
           <div class="input-group-prepend">
-            <span class="input-group-text" id="container5">공/적</span>
+            <span class="input-group-text" id="container5">공컨테이너/적컨테이너</span>
           </div>
           <input type="text" class="form-control" id="container5-input">
         </div>
@@ -110,6 +113,22 @@
       </div>
     </div>
     <!--컨테이너 수송량 예측 끝-->
+    <!-- <div class="container"> -->
+      <div class="row">
+          <div class="col-lg-6">
+            <canvas id="top5"></canvas>
+          </div>
+          <div class="col-lg-6">
+            <canvas id="year"></canvas>
+          </div>
+          <div class="col-lg-6">
+            <canvas id="month"></canvas>
+          </div>
+          <div class="col-lg-6">
+            <canvas id="season"></canvas>
+          </div>
+      </div>
+    <!-- </div> -->
 
         <!--정박지 대기율 예측 예측 시작-->
         <!-- <div class="card border-3 border-primary" style="margin-left:12px;">
@@ -191,10 +210,158 @@
 
         result = data_json['result']
 
-        $('#container-result').append(result)
+        $('#container-result').append(result + "TEU")
       }
     })
   })
+
+  //이용수가 가장 많았던 상위 10개 정박지 이용수 시작
+  let context_top5 =document.getElementById('top5').getContext('2d');
+  let top5 = new Chart(context_top5, {
+    type:'bar',
+    data:{
+      labels: [2,3,6,9,10,11,13,18,21,24],
+      datasets:[{
+        data: [2891,2166,1361,1314,1166,1106,931,907, 778, 755],
+        backgroundColor: [
+          'rgba(255,99,132, 100)',
+          'rgba(54,162,235, 100)',
+          'rgba(255,206,86, 100)',
+          'rgba(75,192,192, 100)',
+          'rgba(153,102,255, 100)',
+          'rgba(255,159,64, 100)',
+          'rgba(77,44,64, 100)',
+          'rgba(205,220,57, 100)',
+          'rgba(0,150,136, 100)',
+          'rgba(63,81,181, 100)',
+        ]
+      }],
+    },
+    options: {
+      plugins:{
+        title:{
+          display: true,
+          text: "상위 10개 정박지 이용수",
+        },
+         legend: {
+           display: false
+          },
+      },
+    }
+  })
+  //이용수가 가장 많았던 상위 10개 정박지 이용수 끝
+
+  //년도별 정박지 이용수 시작
+  let context_year =document.getElementById('year').getContext('2d');
+  let year = new Chart(context_year, {
+    type:'bar',
+    data:{
+      labels: ["2017년","2018년","2019년","2020년","2021년"],
+      datasets:[{
+        data: [6314,7171,6568,6348,2663],
+        backgroundColor: [
+          'rgba(255,99,132, 100)',
+          'rgba(54,162,235, 100)',
+          'rgba(255,206,86, 100)',
+          'rgba(75,192,192, 100)',
+          'rgba(153,102,255, 100)',
+          'rgba(255,159,64, 100)',
+          'rgba(77,44,64, 100)',
+          'rgba(205,220,57, 100)',
+          'rgba(0,150,136, 100)',
+          'rgba(63,81,181, 100)',
+        ]
+      }],
+    },
+    options: {
+      plugins:{
+        title:{
+          display: true,
+          text: "년도별 정박지 이용수",
+        },
+         legend: {
+           display: false
+          },
+      },
+    }
+  })
+  //년도별 정박지 이용수 끝
+
+    //월별 정박지 이용수 시작
+    let context_month =document.getElementById('month').getContext('2d');
+    let month = new Chart(context_month, {
+      type:'bar',
+      data:{
+        labels: ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"],
+        datasets:[{
+          data: [2880/12,2363/12,2801/12,2806/12,2790/12,2268/12,2183/12,2304/12,2221/12,2270/12,2023/12,2155/12],
+          backgroundColor: [
+            'rgba(255,99,132, 100)',
+            'rgba(54,162,235, 100)',
+            'rgba(255,206,86, 100)',
+            'rgba(75,192,192, 100)',
+            'rgba(153,102,255, 100)',
+            'rgba(255,159,64, 100)',
+            'rgba(77,44,64, 100)',
+            'rgba(205,220,57, 100)',
+            'rgba(0,150,136, 100)',
+            'rgba(63,81,181, 100)',
+            'rgba(220,88,42, 100)',
+            'rgba(103,58,183, 100)',
+          ]
+        }],
+      },
+      options: {
+        plugins:{
+          title:{
+            display: true,
+            text: "월별 평균 정박지 이용수",
+          },
+           legend: {
+             display: false
+            },
+        },
+      }
+    })
+    //월별 정박지 이용수 끝
+
+        //계절별 정박지 이용수 시작
+        let context_season =document.getElementById('season').getContext('2d');
+        let season = new Chart(context_season, {
+          type:'bar',
+          data:{
+            labels: ["봄","여름","가을","겨울"],
+            datasets:[{
+              data: [8397/12,6755/12,6514/12,7398/12],
+              backgroundColor: [
+                'rgba(76,175,80, 100)',
+                'rgba(255,152,0, 100)',
+                'rgba(77,44,64, 100)',
+                'rgba(3,169,244, 100)',
+                'rgba(153,102,255, 100)',
+                'rgba(255,159,64, 100)',
+                'rgba(77,44,64, 100)',
+                'rgba(205,220,57, 100)',
+                'rgba(0,150,136, 100)',
+                'rgba(63,81,181, 100)',
+                'rgba(220,88,42, 100)',
+                'rgba(103,58,183, 100)',
+              ]
+            }],
+          },
+          options: {
+            plugins:{
+              title:{
+                display: true,
+                text: "계절별 평균 정박지 이용수",
+              },
+               legend: {
+                 display: false
+                },
+            },
+          }
+        })
+        //계절별 정박지 이용수 끝
 </script>
 
 </html>

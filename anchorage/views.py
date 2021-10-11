@@ -67,10 +67,13 @@ def anchorage_predict(request):
     search_key4 = request.GET['search_key4']
     search_key5 = request.GET['search_key5']
 
+    loaded_model = pickle.load(open('정박지대기율예측.sav', 'rb'))
+    result = loaded_model.predict([[30.028, 3, 1, 10.2, 359.0, 81.0, 2.7, 1.2, 1, 1, 5.0, 7]]).round(2)[0] * 100
+    print(result) #퍼센트값이라 *100해줫으면 좋겟음
+
     #result = loaded_model.predict([[search_key1, search_key2, search_key3, search_key4, search_key5]]).round(2)[0]
-    result = "임시 데이터"
 
     #print(result)
     #print(search_key3)
 
-    return JsonResponse({'result': result})
+    return JsonResponse({'result': round(result)})

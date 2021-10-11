@@ -22,6 +22,11 @@ def container_predict(request):
     elif search_key3 == "외국선":
         search_key3 = 1
 
+    if search_key5 == "공컨테이너":
+         search_key5 = 0
+    elif search_key5 == "적컨테이너":
+        search_key5 = 1
+
     result = loaded_model.predict([[search_key1, search_key2, search_key3, search_key4, search_key5]]).round(2)[0]
 
     print(result)
