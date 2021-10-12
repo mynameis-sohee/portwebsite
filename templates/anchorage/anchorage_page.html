@@ -219,11 +219,11 @@ var defaultMarker1 = new naver.maps.Marker({
     switch(n){
       case 1:
       let temp_html1=`{% if E1_quantity > 16 %}
-              <div class="alert alert-danger">
+              <div class="alert alert-danger" style="color:black;font-size:x-large;">
                 <strong>혼잡!</strong> 현재 정박중인 선박 수 : {{E1_quantity}}
               </div>
               {% else %}
-              <div class="alert alert-info">
+              <div class="alert alert-info" style="color:black;font-size:x-large;">
                 <strong>여유!</strong> 현재 정박중인 선박 수 : {{E1_quantity}}
               </div>
               {% endif %}`
@@ -240,11 +240,11 @@ var defaultMarker1 = new naver.maps.Marker({
               break;
       case 2:
       let temp_html2=`{% if E2_quantity > 7 %}
-              <div class="alert alert-danger">
+              <div class="alert alert-danger" style="color:black;font-size:x-large;">
                 <strong>혼잡!</strong> 현재 정박중인 선박 수 : {{E2_quantity}}
               </div>
               {% else %}
-              <div class="alert alert-info">
+              <div class="alert alert-info" style="color:black;font-size:x-large;">
                 <strong>여유!</strong> 현재 정박중인 선박 수 : {{E2_quantity}}
               </div>
               {% endif %}`
@@ -261,11 +261,11 @@ var defaultMarker1 = new naver.maps.Marker({
               break;
       case 3:
       let temp_html3=`{% if E3_quantity > 7 %}
-              <div class="alert alert-danger">
+              <div class="alert alert-danger"  style="color:black;font-size:x-large;">
                 <strong>혼잡!</strong> 현재 정박중인 선박 수 : {{E3_quantity}}
               </div>
               {% else %}
-              <div class="alert alert-info">
+              <div class="alert alert-info"  style="color:black;font-size:x-large;">
                 <strong>여유!</strong> 현재 정박중인 선박 수 : {{E3_quantity}}
               </div>
               {% endif %}`
@@ -312,22 +312,22 @@ var defaultMarker1 = new naver.maps.Marker({
     <div class="col-xl-4" style="padding:0px">
       <div class="card border-3 border-primary" style="margin-left:12px;">
         <div class="card-body">
-          <h4 class="card-title">울산항 정박지 재박 현황</h4>
+          <h4 class="card-title" style ="font-size: x-large;">울산항 정박지 재박 현황</h4>
           <p class="card-text">
             <div class="btn-group-horizontal">
-              <button type="button" class="btn btn-primary" onclick="ShowingAnchor(1,0);test(1);">정박지 E1</button>
-              <button type="button" class="btn btn-primary" onclick="ShowingAnchor(2,0);test(2);">정박지 E2</button>
-              <button type="button" class="btn btn-primary" onclick="ShowingAnchor(3,0);test(3);">정박지 E3</button>
-              <button type="button" class="btn btn-primary" onclick="emptyMap()">초기화</button>
+              <button type="button" class="btn btn-primary" onclick="ShowingAnchor(1,0);test(1);" style ="font-size: x-large;">정박지 E1</button>
+              <button type="button" class="btn btn-primary" onclick="ShowingAnchor(2,0);test(2);"style ="font-size: x-large;">정박지 E2</button>
+              <button type="button" class="btn btn-primary" onclick="ShowingAnchor(3,0);test(3);"style ="font-size: x-large;">정박지 E3</button>
+              <button type="button" class="btn btn-primary" onclick="emptyMap()"style ="font-size: x-large;">초기화</button>
             </div>
           </p>
           <table class="table">
             <thead>
               <tr>
-                <th scope="col">#</th>
-                <th scope="col">입항 시각</th>
-                <th scope="col">선박 이름</th>
-                <th scope="col">국적</th>
+                <th scope="col" style ="font-size: x-large;">#</th>
+                <th scope="col" style ="font-size: x-large;">입항 시각</th>
+                <th scope="col" style ="font-size: x-large;">선박 이름</th>
+                <th scope="col" style ="font-size: x-large;">국적</th>
               </tr>
             </thead>
             <div class="anchorStatus">
@@ -342,7 +342,7 @@ var defaultMarker1 = new naver.maps.Marker({
           <h2>정박지 대기율 조회</h2>
           <div class="input-group mb-3">
             <div class="input-group-prepend">
-              <span class="input-group-text" id="anchorage1">신고톤수</span>
+              <span class="input-group-text" id="anchorage1" style ="font-size: x-large;">신고톤수(단위:천톤)</span>
             </div>
             <input type="text" class="form-control" id="anchorage1-input" aria-describedby="basic-addon3">
           </div>
@@ -354,19 +354,19 @@ var defaultMarker1 = new naver.maps.Marker({
           </div> -->
           <div class="input-group mb-3">
             <div class="input-group-prepend">
-              <span class="input-group-text" id="anchorage3">선박용도</span>
+              <span class="input-group-text" id="anchorage3" style ="font-size: x-large;">선박용도</span>
             </div>
             <input type="text" class="form-control" id="anchorage3-input" aria-describedby="basic-addon3">
           </div>
           <div class="input-group mb-3">
             <div class="input-group-prepend">
-              <span class="input-group-text" id="anchorage4">서비스 횟수</span>
+              <span class="input-group-text" id="anchorage4" style ="font-size: x-large;">서비스 횟수</span>
             </div>
             <input type="text" class="form-control" id="anchorage4-input" aria-describedby="basic-addon3">
           </div>
           <div class="input-group mb-3">
             <div class="input-group-prepend">
-              <span class="input-group-text" id="anchorage5">정박대기 횟수</span>
+              <span class="input-group-text" id="anchorage5" style ="font-size: x-large;">정박대기 횟수</span>
             </div>
             <input type="text" class="form-control" id="anchorage5-input" aria-describedby="basic-addon3">
           </div>
@@ -395,13 +395,13 @@ var defaultMarker1 = new naver.maps.Marker({
   //컨테이너 수송량 검색
   $(document).on("click", "#anchorage-search", function () {
     let search_key1 = $('#anchorage1-input').val()
-    let search_key2 = $('#anchorage2-input').val()
+    // let search_key2 = $('#anchorage2-input').val()
     let search_key3 = $('#anchorage3-input').val()
     let search_key4 = $('#anchorage4-input').val()
     let search_key5 = $('#anchorage5-input').val()
 
     console.log(search_key1)
-    console.log(search_key2)
+    // console.log(search_key2)
     console.log(search_key3)
     console.log(search_key4)
     console.log(search_key5)
@@ -412,7 +412,7 @@ var defaultMarker1 = new naver.maps.Marker({
       dataType: "json",
       data: {
         'search_key1': search_key1,
-        'search_key2': search_key2,
+        // 'search_key2': search_key2,
         'search_key3': search_key3,
         'search_key4': search_key4,
         'search_key5': search_key5,
