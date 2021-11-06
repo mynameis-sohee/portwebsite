@@ -15,5 +15,4 @@ djongo Docs 링크: https://www.djongomapper.com/get-started/
 
 PORTWEBSITE 디렉토리 바로 밑에 templates 폴더 만들어둬서 거기서 html작업
 부트스트랩 5.0.2 버전으로 사전작업 다 끝내둠
-각 페이지 마다 Nav 컴포넌트 박아둠
 링크 참조: https://getbootstrap.com/docs/5.0/components/navbar/
