@@ -39,6 +39,9 @@
     height: 500px;
     float: right;
   }
+  .input-group-text{
+    width: 225px;
+  }
 
   
 </style>
@@ -71,33 +74,38 @@
         <h2>컨테이너 수송량 예측</h2>
         <div class="input-group mb-3">
           <div class="input-group-prepend">
-            <span class="input-group-text" id="container1">년도</span>
+            <span class="input-group-text" id="container1"style="font-size:x-large;">년도</span>
           </div>
-          <input type="text" class="form-control" id="container1-input">
+          <!-- <input type="text" class="form-control" id="container1-input"style="font-size:x-large;" value="2021"> -->
+          <input type="text" class="form-control" id="container1-input"style="font-size:x-large;">
         </div>
         <div class="input-group mb-3">
           <div class="input-group-prepend">
-            <span class="input-group-text" id="container2">달</span>
+            <span class="input-group-text" id="container2"style="font-size:x-large;">달</span>
           </div>
-          <input type="text" class="form-control" id="container2-input">
+          <!-- <input type="text" class="form-control" id="container2-input"style="font-size:x-large;"value="11"> -->
+          <input type="text" class="form-control" id="container2-input"style="font-size:x-large;">
         </div>
         <div class="input-group mb-3">
           <div class="input-group-prepend">
-            <span class="input-group-text" id="container3">국적선/외국선</span>
+            <span class="input-group-text" id="container3"style="font-size:x-large;">국적선/외국선</span>
           </div>
-          <input type="text" class="form-control" id="container3-input">
+          <!-- <input type="text" class="form-control" id="container3-input"style="font-size:x-large;"value="외국선"> -->
+          <input type="text" class="form-control" id="container3-input"style="font-size:x-large;">
         </div>
         <div class="input-group mb-3">
           <div class="input-group-prepend">
-            <span class="input-group-text" id="container4">FT</span>
+            <span class="input-group-text" id="container4"style="font-size:x-large;">FT</span>
           </div>
-          <input type="text" class="form-control" id="container4-input">
+          <!-- <input type="text" class="form-control" id="container4-input"style="font-size:x-large;"value="40"> -->
+          <input type="text" class="form-control" id="container4-input"style="font-size:x-large;">
         </div>
         <div class="input-group mb-3">
           <div class="input-group-prepend">
-            <span class="input-group-text" id="container5">공컨테이너/적컨테이너</span>
+            <span class="input-group-text" id="container5"style="font-size:x-large;">공컨테이너/적컨테이너</span>
           </div>
-          <input type="text" class="form-control" id="container5-input">
+          <!-- <input type="text" class="form-control" id="container5-input"style="font-size:x-large;"value="적컨테이너"> -->
+          <input type="text" class="form-control" id="container5-input"style="font-size:x-large;">
         </div>
         <button type="button" class="btn btn-primary" id="container-search"
           onclick="">검색</button>
@@ -210,7 +218,7 @@
 
         result = data_json['result']
 
-        $('#container-result').append(result + "TEU")
+        $('#container-result').append("수송량 : "+result + "TEU")
       }
     })
   })

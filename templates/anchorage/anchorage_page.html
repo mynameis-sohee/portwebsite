@@ -38,6 +38,10 @@
     height: 1300px;
     float: right;
   }
+
+  .input-group-text{
+    width: 200px;
+  }
 </style>
 <script>
   let map
@@ -190,6 +194,27 @@ var defaultMarker1 = new naver.maps.Marker({
             content: '정박지 E3'
           });
           infowindow.open(map, new naver.maps.LatLng(35.428888888888885, 129.41416666666666));
+        }
+        for(let i=1;i<3;i++)
+        {
+          var defaultMarker = new naver.maps.Marker({
+    position: new naver.maps.LatLng(35.425388888888886-i*0.006, 129.4206388888889+i*0.005),
+    map: map,
+    icon: {
+        content: `<img src="{% static 'images/ship1.png' %}" width="50" height="50"></img>`,
+        size: new naver.maps.Size(22, 35),
+        anchor: new naver.maps.Point(11, 35)
+    }
+});
+var defaultMarker1 = new naver.maps.Marker({
+    position: new naver.maps.LatLng(35.425388888888886-i*0.006, 129.4406388888889+i*0.005),
+    map: map,
+    icon: {
+        content: `<img src="{% static 'images/ship1.png' %}" width="50" height="50"></img>`,
+        size: new naver.maps.Size(22, 35),
+        anchor: new naver.maps.Point(11, 35)
+    }
+});
         }
         map.setCenter(new naver.maps.LatLng(35.4160,129.410))
         map.setZoom(14,true)
@@ -344,6 +369,7 @@ var defaultMarker1 = new naver.maps.Marker({
             <div class="input-group-prepend">
               <span class="input-group-text" id="anchorage1" style ="font-size: x-large;">신고톤수(단위:천톤)</span>
             </div>
+            <!-- <input type="text" class="form-control" id="anchorage1-input" aria-describedby="basic-addon3"value="3"> -->
             <input type="text" class="form-control" id="anchorage1-input" aria-describedby="basic-addon3">
           </div>
           <!-- <div class="input-group mb-3">
@@ -356,18 +382,21 @@ var defaultMarker1 = new naver.maps.Marker({
             <div class="input-group-prepend">
               <span class="input-group-text" id="anchorage3" style ="font-size: x-large;">선박용도</span>
             </div>
+            <!-- <input type="text" class="form-control" id="anchorage3-input" aria-describedby="basic-addon3"value="시멘트운반선"> -->
             <input type="text" class="form-control" id="anchorage3-input" aria-describedby="basic-addon3">
           </div>
           <div class="input-group mb-3">
             <div class="input-group-prepend">
               <span class="input-group-text" id="anchorage4" style ="font-size: x-large;">서비스 횟수</span>
             </div>
+            <!-- <input type="text" class="form-control" id="anchorage4-input" aria-describedby="basic-addon3"value="2"> -->
             <input type="text" class="form-control" id="anchorage4-input" aria-describedby="basic-addon3">
           </div>
           <div class="input-group mb-3">
             <div class="input-group-prepend">
               <span class="input-group-text" id="anchorage5" style ="font-size: x-large;">정박대기 횟수</span>
             </div>
+            <!-- <input type="text" class="form-control" id="anchorage5-input" aria-describedby="basic-addon3"value="1"> -->
             <input type="text" class="form-control" id="anchorage5-input" aria-describedby="basic-addon3">
           </div>
           <button type="button" class="btn btn-primary" id="anchorage-search">검색</button>
@@ -386,7 +415,6 @@ var defaultMarker1 = new naver.maps.Marker({
     <div class="col-xl-8" style="padding:0px">
       <div id="map" style="border-radius: 30px;"></div>
     </div>
-    <img src="{% static 'images/ship1.png' %}"></img>
   </div>
 
 </body>
@@ -427,7 +455,7 @@ var defaultMarker1 = new naver.maps.Marker({
 
         data_json = data
         result = data_json['result']
-        $('#anchorage-result').append(result + "%")
+        $('#anchorage-result').append("대기율 : "+result + "%")
       }
     })
   })

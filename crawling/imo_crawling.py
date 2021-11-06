@@ -18,7 +18,7 @@ def get_IMO(search_key):
     driver = webdriver.Chrome(path, options=chrome_options)
     #--------------------------------------------------------------------------------------------------------
 
-    url = "https://new.portmis.go.kr/portmis/websquare/popup.html?w2xPath=/portmis/w2/sample/popup/pop/UC_PM_CM_002_07_02.xml&menuCd=M0182&popupID=mf_tacMain_contents_M0182_body_popupSearchVsslInnb&idx=idx10_16280424157712233.0042600478396&w2xHome=/portmis/w2/main/&w2xDocumentRoot="
+    url = "https://new.portmis.go.kr/portmis/websquare/popup.jsp?w2xPath=/portmis/w2/sample/popup/pop/UC_PM_CM_002_07_02.xml&menuCd=M0182&popupID=mf_tacMain_contents_M0182_body_popupSearchVsslInnb&idx=idx10_16361987602659424.307303020947&w2xHome=/portmis/w2/main/&w2xDocumentRoot="
 
     driver.get(url)
 

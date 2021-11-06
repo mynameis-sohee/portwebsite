@@ -41,13 +41,7 @@ def GetHarborData(maincode,subcode,harborname):
     a = driver.find_element_by_id(
         "mf_tacMain_contents_M4735_body_genMenuLevel1_1_genMenuLevel2_4_genMenuLevel3_3_btnMenuLevel3")
     a.click()
-    req = driver.page_source
-        # driver.quit()  # 정보를 가져왔으므로 드라이버는 꺼줍니다.
 
-        # soup = BeautifulSoup(data.text, 'html.parser')
-    soup = BeautifulSoup(req, 'html.parser')  # 가져온 정보를 beautifulsoup으로 파싱해줍니다.
-
-    date_array = soup.select_one("table.w2calender_content_table > tbody > tr >td")
 
     harborcode_box = driver.find_element_by_xpath('//*[@id="mf_tacMain_contents_M5784_body_udc_prtAgCd_cmmCd"]')
     harborcode_box.send_keys('820')  # 울산항코드
@@ -55,7 +49,7 @@ def GetHarborData(maincode,subcode,harborname):
     input_box = driver.find_element_by_xpath('//*[@id="mf_tacMain_contents_M5784_body_calSrchFrDt_img"]')
     input_box.click()
 
-    date_button = driver.find_element_by_xpath('//*[@id="mf_tacMain_contents_M5784_body_calSrchFrDt_calendar_cell_0_3"]/button')
+    date_button = driver.find_element_by_xpath('//*[@id="mf_tacMain_contents_M5784_body_calSrchFrDt_calendar_cell_3_1"]/button')
     date_button.click()
 
     fac_code = driver.find_element_by_xpath('//*[@id="mf_tacMain_contents_M5784_body_srchFcltyCd"]')
@@ -74,5 +68,6 @@ def GetHarborData(maincode,subcode,harborname):
         '//*[@id="mf_tacMain_contents_M5784_body_grdNlgVsslInOutList_cell_0_8"]/nobr').text
     sql = "INSERT INTO main_harbordata (date,shipname,worktype,선석,부두이름) VALUES (%s,%s,%s,%s,%s)"
     val = (temp_date,temp_shipname,temp_worktype,subcode,harborname)
-    cursor.execute(sql,val)       
+    cursor.execute(sql,val)
+    driver.quit()
 GetHarborDataFunc()

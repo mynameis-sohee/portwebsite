@@ -24,8 +24,23 @@ except:
 # Create your views here.
 def index(request):
 
-    return render(request, 'main/main_page.html',{**ShowingPortStatus(),**ShowingWeather(),**AnchorageChart()})
+    return render(request, 'main/main_page.html',{**ShowingPortStatus(),**ShowingWeather(),**AnchorageChart(),**ShowingTemp()})
     # return render(request, 'main/main_page.html',{**ShowingPortStatus()})
+
+def ShowingTemp():
+    cursor = connection.cursor()
+    cursor.execute("SELECT (temp) FROM forecast")
+    context = {}
+    base = "날씨"
+    cnt = 1
+    for rec in cursor.fetchall():
+        key = base + (str(cnt))
+        cnt = cnt + 1
+        context[key] = rec[0]
+
+    cursor.close()
+    return context
+
 
 def ShowingPortStatus():
     port_status = []
@@ -205,6 +220,25 @@ def single_Vessel_position1(request):
         print('timestamp:' + res_timestamp)
         print('dsrc:' + res_dsrc)
         
+        return JsonResponse(context)
+
+    else:
+        return HttpResponse("GET이아님")
+
+def vesselpositiontest(request):
+    if request.method == 'GET':
+        context = {
+            'result' : 'success',
+            'mmsi' : 374945000,
+            'latitude' : 35.45292,
+            'longitude' : 129.4361,
+            'speed' : 'a',
+            'heading' : 'a',
+            'course' : 'a',
+            'status' : 'a',
+            'timestamp' : 'a',
+            'dsrc' : 'a'
+        }
         return JsonResponse(context)
 
     else:

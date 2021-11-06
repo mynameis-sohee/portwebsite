@@ -89,9 +89,17 @@
   let a = 0
   let map //네이버 지도 오브젝트(전역으로 해야됨)
   let temp_html4
-  let HarborLatArray = [35.528672, 35.526908, 35.522900, 35.52172551482321, 35.519438, 35.517193,35.516049,35.513676,35.511872,35.496572]
-let HarborLonArray = [129.375364, 129.373515, 129.373701, 129.37551417157238, 129.374956, 129.376094,129.386027,129.386098,129.386128,129.382026]
-let HarborName = ['제1부두', '제2부두', '제3부두', '제4부두', '제5부두', '제6부두','제7부두','제8부두','제9부두','양곡부두']
+  let HarborLatArray = [35.528672, 35.526908, 35.522900, 35.52172551482321, 35.519438, 35.517193,35.516049,35.513676,35.511872,35.507374,35.496572,35.502877,35.501288,35.498476,35.499335,35.495949,35.494752,35.491472,35.486251,35.483106,35.479865,35.486556,35.483958,35.462418,35.459004,35.455316,35.448001,35.448215,35.452493,35.448818,35.443538,35.442131,35.439657,35.438729,35.439297,35.440232,35.440984,35.442977,35.447714,35.456592,35.459214]
+let HarborLonArray = [129.375364, 129.373515, 129.373701, 129.37551417157238, 129.374956, 129.376094,129.386027,129.386098,129.386128,129.387898,129.382026,129.379025,129.365063,129.367477,129.380135,129.384239,129.386524,129.388262,129.390414,129.390350,129.390189,129.386333,129.384974,129.346820,129.347204,129.348170,129.352579,129.353287,129.348717,129.354617,129.358300,129.355929,129.354051,129.356977,129.358737,129.361119,129.363512,129.366001,129.368608,129.363247,129.355790]
+let HarborName = ['제1부두', '제2부두', '제3부두', '제4부두', '제5부두', '제6부두','제7부두','제8부두','제9부두','일반부두','양곡부두','장생포호안','SK1부두','SK2부두','UTT부두','SK3부두','SK4부두','SK5부두','SK6부두','SK7부두','SK8부두','가스부두','남화부두','UTK부두','OTK부두','유화부두','S-OIL1부두','S-OIL2부두','S-OIL3부두','S-OIL4부두','효성부두','정일컨부두','달포부두'
+,'온산1부두'
+,'온산2부두'
+,'온산3부두'
+,'온산4부두'
+,'정일1부두'
+,'정일2부두'
+,'신항컨테이너부두'
+,'신항일반부두']
 let HarborMainCode = ['MB1', 'MB2', 'MB3', 'MB4', 'MB5', 'MB6','MB7','MB8']
 //let HarborSubCode=[['01','02'],['01','02','03'],['01','02'],['01','02'],['01'],['01','02','03']]
 let HarborSubCode = ['01', '01', '01', '01', '01', '01','01','01','01']
@@ -255,7 +263,7 @@ let data_json
     var search_key = $('#shipCallCode').val()
     $.ajax({
       type: 'GET',
-      url: "{% url 'single_Vessel_position1' %}",
+      url: "{% url 'vesselpositiontest' %}",
       dataType: "json",
       data: {
         'search_key': search_key
@@ -354,7 +362,8 @@ let data_json
                   </div>
 
                   <h1><span>일부 파손</span></h1>
-                  <li style = "font-size: x-large;">OTK2부두2선석</li>
+                  <li style = "font-size: x-large;">OTK2부두2선석</li>        
+                  2020년 해안도로 유실 영향으로 인한 OTK 2부두 입구 파손 및 침하 발생 (현재 미운영중인 부두 임)      
                 </div>
               </div>
               <div class="box"style="width:50%;">
@@ -403,7 +412,7 @@ let data_json
                     <div class="col-xl-3 list-group tabcontent" id="list-tab" role="tablist"
                       style="padding:0rem;">
                       <h3 style="text-align: center;"><span>부두목록</span></h3>
-                      <div class="overflow-scroll"style="height:300px;">
+                      <div class="overflow-scroll"style="height:400px;">
                       <button type="button" class="list-group-item list-group-item-action" value="제1부두" style="font-size:x-large;">제1부두</button>
                       <button type="button" class="list-group-item list-group-item-action" value="제2부두"style="font-size:x-large;">제2부두</button>
                       <button type="button" class="list-group-item list-group-item-action" value="제3부두"style="font-size:x-large;">제3부두</button>
@@ -413,7 +422,39 @@ let data_json
                       <button type="button" class="list-group-item list-group-item-action" value="제7부두"style="font-size:x-large;">제7부두</button>
                       <button type="button" class="list-group-item list-group-item-action" value="제8부두"style="font-size:x-large;">제8부두</button>
                       <button type="button" class="list-group-item list-group-item-action" value="제9부두"style="font-size:x-large;">제9부두</button>
+                      <button type="button" class="list-group-item list-group-item-action" value="일반부두"style="font-size:x-large;">일반부두</button>
                       <button type="button" class="list-group-item list-group-item-action" value="양곡부두"style="font-size:x-large;">양곡부두</button>
+                      <button type="button" class="list-group-item list-group-item-action" value="장생포호안"style="font-size:x-large;">장생포호안</button>
+                      <button type="button" class="list-group-item list-group-item-action" value="SK1부두"style="font-size:x-large;">SK1부두</button>
+                      <button type="button" class="list-group-item list-group-item-action" value="SK2부두"style="font-size:x-large;">SK2부두</button>
+                      <button type="button" class="list-group-item list-group-item-action" value="SK3부두"style="font-size:x-large;">SK3부두</button>
+                      <button type="button" class="list-group-item list-group-item-action" value="SK4부두"style="font-size:x-large;">SK4부두</button>
+                      <button type="button" class="list-group-item list-group-item-action" value="SK5부두"style="font-size:x-large;">SK5부두</button>
+                      <button type="button" class="list-group-item list-group-item-action" value="SK6부두"style="font-size:x-large;">SK6부두</button>
+                      <button type="button" class="list-group-item list-group-item-action" value="SK7부두"style="font-size:x-large;">SK7부두</button>
+                      <button type="button" class="list-group-item list-group-item-action" value="SK8부두"style="font-size:x-large;">SK8부두</button>
+                      <button type="button" class="list-group-item list-group-item-action" value="가스부두"style="font-size:x-large;">가스부두</button>
+                      <button type="button" class="list-group-item list-group-item-action" value="남화부두"style="font-size:x-large;">남화부두</button>
+                      <button type="button" class="list-group-item list-group-item-action" value="UTK부두"style="font-size:x-large;">UTK부두</button>
+                      <button type="button" class="list-group-item list-group-item-action" value="OTK부두"style="font-size:x-large;">OTK부두</button>
+                      <button type="button" class="list-group-item list-group-item-action" value="유화부두"style="font-size:x-large;">유화부두</button>
+                      <button type="button" class="list-group-item list-group-item-action" value="S-OIL1부두"style="font-size:x-large;">S-OIL1부두</button>
+                      <button type="button" class="list-group-item list-group-item-action" value="S-OIL2부두"style="font-size:x-large;">S-OIL2부두</button>
+                      <button type="button" class="list-group-item list-group-item-action" value="S-OIL3부두"style="font-size:x-large;">S-OIL3부두</button>
+                      <button type="button" class="list-group-item list-group-item-action" value="S-OIL4부두"style="font-size:x-large;">S-OIL4부두</button>
+                      <button type="button" class="list-group-item list-group-item-action" value="효성부두"style="font-size:x-large;">효성부두</button>
+                      <button type="button" class="list-group-item list-group-item-action" value="정일컨부두"style="font-size:x-large;">정일컨부두</button>
+                      <button type="button" class="list-group-item list-group-item-action" value="달포부두"style="font-size:x-large;">달포부두</button>
+                      <button type="button" class="list-group-item list-group-item-action" value="온산1부두"style="font-size:x-large;">온산1부두</button>
+                      <button type="button" class="list-group-item list-group-item-action" value="온산2부두"style="font-size:x-large;">온산2부두</button>
+                      <button type="button" class="list-group-item list-group-item-action" value="온산3부두"style="font-size:x-large;">온산3부두</button>
+                      <button type="button" class="list-group-item list-group-item-action" value="온산4부두"style="font-size:x-large;">온산4부두</button>
+                      <button type="button" class="list-group-item list-group-item-action" value="정일1부두"style="font-size:x-large;">정일1부두</button>
+                      <button type="button" class="list-group-item list-group-item-action" value="정일2부두"style="font-size:x-large;">정일2부두</button>
+                      <button type="button" class="list-group-item list-group-item-action" value="신항컨테이너부두"style="font-size:x-large;">신항컨테이너부두</button>
+                      <button type="button" class="list-group-item list-group-item-action" value="신항일반부두"style="font-size:x-large;">신항일반부두</button>
+
+
                     </div>
                     </div>
                     <div class="col-xl-3 tabcontent" id="shipSearch">
@@ -723,9 +764,9 @@ let data_json
                       <div class="row no-space" style="font-size: 20px;">
                         <div class="col-2">
                           <div>
-                            <div id="after1"></div>
-                            <i class="wi-day-sunny fs-30 mb-10"></i>
-                            <div>24°
+                            <div id="after1"></div>                            
+                            <i class="wi-day-storm-showers fs-30 mb-10"></i>
+                            <div id="temp1">{{날씨1}}°
                               <span class="fs-12">C</span>
                             </div>
                           </div>
@@ -734,7 +775,7 @@ let data_json
                           <div>
                             <div id="after2"></div>
                             <i class="wi-day-cloudy fs-30 mb-10"></i>
-                            <div>21°
+                            <div id="temp2">{{날씨2}}°
                               <span class="fs-12">C</span>
                             </div>
                           </div>
@@ -743,7 +784,7 @@ let data_json
                           <div>
                             <div id="after3"></div>
                             <i class="wi-day-sunny fs-30 mb-10"></i>
-                            <div>25°
+                            <div id="temp3">{{날씨3}}°
                               <span class="fs-12">C</span>
                             </div>
                           </div>
@@ -752,7 +793,7 @@ let data_json
                           <div>
                             <div id="after4"></div>
                             <i class="wi-day-cloudy-gusts fs-30 mb-10"></i>
-                            <div>20°
+                            <div id="temp4">{{날씨4}}°
                               <span class="fs-12">C</span>
                             </div>
                           </div>
@@ -761,7 +802,7 @@ let data_json
                           <div>
                             <div id="after5"></div>
                             <i class="wi-day-lightning fs-30 mb-10"></i>
-                            <div>18°
+                            <div id="temp5">{{날씨5}}°
                               <span class="fs-12">C</span>
                             </div>
                           </div>
@@ -770,7 +811,7 @@ let data_json
                           <div>
                             <div id="after6"></div>
                             <i class="wi-day-storm-showers fs-30 mb-10"></i>
-                            <div>14°
+                            <div id="temp6">{{날씨6}}°
                               <span class="fs-12">C</span>
                             </div>
                           </div>
