@@ -5,7 +5,7 @@ import psycopg2
 
 #https://openweathermap.org/forecast5
 
-url = "http://api.openweathermap.org/data/2.5/forecast?q=Ulsan&appid=d216b3f0da45a198ccc1c1a9de4af30b"
+url = "http://api.openweathermap.org/data/2.5/forecast?q=Ulsan&appid=my_key"
 
 res = requests.get(url)
 dataList = res.json()['list']
